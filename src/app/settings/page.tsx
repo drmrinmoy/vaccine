@@ -5,7 +5,19 @@ import { BottomNav } from '@/components/bottom-nav';
 import { ChevronRight, Bell, Moon, Globe, Shield, HelpCircle, LogOut } from 'lucide-react';
 import { mockUserProfile } from '@/data/mock';
 
-const settingsSections = [
+interface SettingsItem {
+  icon: React.ElementType;
+  label: string;
+  value?: string | null;
+  danger?: boolean;
+}
+
+interface SettingsSection {
+  title: string;
+  items: SettingsItem[];
+}
+
+const settingsSections: SettingsSection[] = [
   {
     title: 'Account',
     items: [

@@ -33,7 +33,7 @@ export default function Home() {
         {/* Today's Recommendations */}
         <section>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Today's Picks</h2>
+            <h2 className="text-xl font-semibold">Today&apos;s Picks</h2>
             <button className="text-sm text-green-400">View all</button>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

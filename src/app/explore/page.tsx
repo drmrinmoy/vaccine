@@ -96,7 +96,7 @@ export default function ExplorePage() {
         {/* No Results */}
         {filteredRecipes.length === 0 && filteredTips.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-gray-400">No results found for "{searchQuery}"</p>
+            <p className="text-gray-400">No results found for &ldquo;{searchQuery}&rdquo;</p>
             <p className="text-sm text-gray-500 mt-2">Try adjusting your search or category filter</p>
           </div>
         )}
