@@ -11,7 +11,7 @@ const menuItems = [
 ];
 
 const childProfile = {
-  name: "Arjun",
+  name: "Vasu",
   age: 7,
   region: "Maharashtra",
   dietaryPreferences: ["Vegetarian"],
