@@ -9,9 +9,9 @@ import { AddChildForm } from '@/components/add-child-form';
 import { AddVaccineForm } from '@/components/add-vaccine-form';
 import { VaccineRecommendation } from '@/components/vaccine-recommendation';
 import { getVaccineRecommendations, getCatchupVaccineRecommendations } from '@/utils/vaccine-utils';
-import { mockVaccines, mockVaccineSchedule, mockChildren, mockDoctorProfile } from '@/data/mock';
+import { mockVaccines, mockVaccineSchedule, mockChildren } from '@/data/mock';
 import { Child, Vaccine, VaccineDose } from '@/types';
-import { Plus, Search, Filter, ArrowLeft, Shield } from 'lucide-react';
+import { Plus, Search, ArrowLeft, Shield } from 'lucide-react';
 
 export default function VaccinesPage() {
   // State for children and vaccines

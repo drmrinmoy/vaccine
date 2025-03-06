@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Child, Vaccine, VaccineDose } from '@/types';
+import { Child, Vaccine } from '@/types';
 import { CheckCircle, Clock, AlertTriangle } from 'lucide-react';
 
 interface VaccineRecommendationProps {

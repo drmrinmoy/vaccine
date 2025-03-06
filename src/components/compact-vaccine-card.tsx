@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Child, Vaccine, VaccineDose } from '@/types';
+import { Child, Vaccine } from '@/types';
 import { CheckCircle, Clock, AlertTriangle, Shield, Calendar } from 'lucide-react';
 
 interface CompactVaccineCardProps {
@@ -23,9 +23,6 @@ export function CompactVaccineCard({
   const administeredDoses = child.vaccineHistory.filter(
     dose => dose.vaccineId === vaccine.id
   );
-  
-  // Calculate remaining doses
-  const remainingDoses = vaccine.doseCount - administeredDoses.length;
   
   // Format the due date if provided
   const formattedDueDate = dueDate 
@@ -67,7 +64,7 @@ export function CompactVaccineCard({
     }
   };
 
-  const { icon, bgColor, borderColor, textColor, label } = statusConfig[status];
+  const { bgColor, borderColor, textColor, label } = statusConfig[status];
 
   // Create dose indicators
   const doseIndicators = [];

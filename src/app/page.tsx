@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react';
 import { BottomNav } from '@/components/bottom-nav';
 import { RecipeCard } from '@/components/recipe-card';
 import { NutritionTipCard } from '@/components/nutrition-tip-card';
-import { VaccineRecommendation } from '@/components/vaccine-recommendation';
 import { AddChildForm } from '@/components/add-child-form';
 import { CompactVaccineSchedule } from '@/components/compact-vaccine-schedule';
 import { mockRecipes, mockNutritionTips, mockUserProfile, mockVaccines, mockVaccineSchedule, mockChildren } from '@/data/mock';
-import { TrendingUp, Apple, Brain, Shield, Plus, X, User, ChevronRight, Clipboard, Syringe, Utensils, Trash2, Edit } from 'lucide-react';
+import { TrendingUp, Shield, Plus, X, User, ChevronRight, Clipboard, Syringe, Utensils, Trash2, Edit } from 'lucide-react';
 import { getVaccineRecommendations } from '@/utils/vaccine-utils';
 import { formatAge } from '@/utils/vaccine-utils';
 import { Child } from '@/types';
@@ -33,11 +32,6 @@ export default function Home() {
   const vaccineRecommendations = selectedChild 
     ? getVaccineRecommendations(selectedChild, mockVaccines, mockVaccineSchedule)
     : [];
-  
-  // Get due and overdue vaccines
-  const dueVaccines = vaccineRecommendations.filter(rec => 
-    rec.status === 'due' || rec.status === 'overdue'
-  );
 
   // Handle adding a new child
   const handleAddChild = (newChild: Omit<Child, 'id' | 'vaccineHistory'>) => {

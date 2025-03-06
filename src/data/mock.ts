@@ -1,4 +1,4 @@
-import { Recipe, MealPlan, NutritionTip, Achievement, UserProfile, Vaccine, Child, VaccineSchedule, VaccineDose } from '@/types';
+import { Recipe, MealPlan, NutritionTip, Achievement, UserProfile, Vaccine, Child, VaccineSchedule } from '@/types';
 
 export const mockRecipes: Recipe[] = [
   {
