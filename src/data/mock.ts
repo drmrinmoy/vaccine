@@ -1,4 +1,4 @@
-import { Recipe, MealPlan, NutritionTip, Achievement, UserProfile } from '@/types';
+import { Recipe, MealPlan, NutritionTip, Achievement, UserProfile, Vaccine, Child, VaccineSchedule, VaccineDose } from '@/types';
 
 export const mockRecipes: Recipe[] = [
   {
@@ -119,7 +119,23 @@ export const mockUserProfile: UserProfile = {
   favoriteRecipes: ['1', '2'],
   achievements: mockAchievements,
   streakDays: 7,
-  lastActive: new Date().toISOString()
+  lastActive: new Date().toISOString(),
+  role: 'parent'
+};
+
+export const mockDoctorProfile: UserProfile = {
+  id: '2',
+  name: 'Dr. Sharma',
+  age: 42,
+  region: 'Delhi',
+  dietaryPreferences: [],
+  allergies: [],
+  favoriteRecipes: [],
+  achievements: [],
+  streakDays: 0,
+  lastActive: new Date().toISOString(),
+  role: 'doctor',
+  children: [] // Will be populated with children under doctor's care
 };
 
 export const mockMealPlan: MealPlan = {
@@ -145,4 +161,258 @@ export const mockMealPlan: MealPlan = {
       ]
     }
   ]
-}; 
+};
+
+// Mock data for vaccines based on National Immunization Schedule (NIS) of India
+export const mockVaccines: Vaccine[] = [
+  {
+    id: 'v1',
+    name: 'BCG',
+    description: 'Bacillus Calmette-Guerin vaccine protects against tuberculosis',
+    diseases: ['Tuberculosis'],
+    recommendedAges: ['At birth'],
+    doseCount: 1,
+    sideEffects: ['Mild fever', 'Small red sore at injection site'],
+    image: '/images/vaccines/bcg.jpg'
+  },
+  {
+    id: 'v2',
+    name: 'OPV',
+    description: 'Oral Polio Vaccine protects against poliomyelitis',
+    diseases: ['Polio'],
+    recommendedAges: ['At birth', '6 weeks', '10 weeks', '14 weeks'],
+    doseCount: 5,
+    catchupAges: ['Up to 5 years'],
+    sideEffects: ['Rarely causes any side effects'],
+    image: '/images/vaccines/opv.jpg'
+  },
+  {
+    id: 'v3',
+    name: 'Hepatitis B',
+    description: 'Protects against Hepatitis B virus infection',
+    diseases: ['Hepatitis B'],
+    recommendedAges: ['At birth', '6 weeks', '10 weeks', '14 weeks'],
+    doseCount: 4,
+    catchupAges: ['Up to 18 years'],
+    sideEffects: ['Pain at injection site', 'Mild fever'],
+    image: '/images/vaccines/hepb.jpg'
+  },
+  {
+    id: 'v4',
+    name: 'DPT',
+    description: 'Combined vaccine protecting against Diphtheria, Pertussis (whooping cough), and Tetanus',
+    diseases: ['Diphtheria', 'Pertussis', 'Tetanus'],
+    recommendedAges: ['6 weeks', '10 weeks', '14 weeks', '16-24 months', '5-6 years'],
+    doseCount: 5,
+    catchupAges: ['Up to 7 years'],
+    sideEffects: ['Fever', 'Pain and swelling at injection site', 'Irritability'],
+    image: '/images/vaccines/dpt.jpg'
+  },
+  {
+    id: 'v5',
+    name: 'Hib',
+    description: 'Protects against Haemophilus influenzae type b bacteria',
+    diseases: ['Pneumonia', 'Meningitis'],
+    recommendedAges: ['6 weeks', '10 weeks', '14 weeks'],
+    doseCount: 3,
+    catchupAges: ['Up to 5 years'],
+    sideEffects: ['Redness at injection site', 'Fever'],
+    image: '/images/vaccines/hib.jpg'
+  },
+  {
+    id: 'v6',
+    name: 'Rotavirus',
+    description: 'Protects against rotavirus infections which cause severe diarrhea',
+    diseases: ['Rotavirus gastroenteritis'],
+    recommendedAges: ['6 weeks', '10 weeks', '14 weeks'],
+    doseCount: 3,
+    catchupAges: ['Up to 8 months'],
+    sideEffects: ['Mild diarrhea', 'Vomiting', 'Irritability'],
+    image: '/images/vaccines/rotavirus.jpg'
+  },
+  {
+    id: 'v7',
+    name: 'PCV',
+    description: 'Pneumococcal Conjugate Vaccine protects against pneumococcal infections',
+    diseases: ['Pneumonia', 'Meningitis', 'Ear infections'],
+    recommendedAges: ['6 weeks', '10 weeks', '14 weeks', '12-15 months'],
+    doseCount: 4,
+    catchupAges: ['Up to 5 years'],
+    sideEffects: ['Pain at injection site', 'Mild fever', 'Irritability'],
+    image: '/images/vaccines/pcv.jpg'
+  },
+  {
+    id: 'v8',
+    name: 'IPV',
+    description: 'Inactivated Polio Vaccine provides additional protection against polio',
+    diseases: ['Polio'],
+    recommendedAges: ['6 weeks', '14 weeks'],
+    doseCount: 2,
+    catchupAges: ['Up to 5 years'],
+    sideEffects: ['Pain at injection site', 'Irritability'],
+    image: '/images/vaccines/ipv.jpg'
+  },
+  {
+    id: 'v9',
+    name: 'Measles',
+    description: 'Protects against measles virus infection',
+    diseases: ['Measles'],
+    recommendedAges: ['9-12 months'],
+    doseCount: 1,
+    catchupAges: ['Up to 5 years'],
+    sideEffects: ['Fever', 'Rash', 'Runny nose'],
+    image: '/images/vaccines/measles.jpg'
+  },
+  {
+    id: 'v10',
+    name: 'MMR',
+    description: 'Combined vaccine protecting against Measles, Mumps, and Rubella',
+    diseases: ['Measles', 'Mumps', 'Rubella'],
+    recommendedAges: ['16-24 months', '5-6 years'],
+    doseCount: 2,
+    catchupAges: ['Up to 18 years'],
+    sideEffects: ['Fever', 'Rash', 'Swollen glands'],
+    image: '/images/vaccines/mmr.jpg'
+  },
+  {
+    id: 'v11',
+    name: 'JE',
+    description: 'Japanese Encephalitis vaccine protects against JE virus',
+    diseases: ['Japanese Encephalitis'],
+    recommendedAges: ['12-15 months', '16-24 months'],
+    doseCount: 2,
+    catchupAges: ['Up to 15 years'],
+    sideEffects: ['Fever', 'Headache', 'Muscle pain'],
+    image: '/images/vaccines/je.jpg'
+  },
+  {
+    id: 'v12',
+    name: 'Typhoid',
+    description: 'Protects against typhoid fever caused by Salmonella Typhi',
+    diseases: ['Typhoid fever'],
+    recommendedAges: ['2 years and above'],
+    doseCount: 1,
+    catchupAges: ['Up to 18 years'],
+    sideEffects: ['Pain at injection site', 'Fever', 'Headache'],
+    image: '/images/vaccines/typhoid.jpg'
+  }
+];
+
+// Mock vaccine schedule based on NIS India
+export const mockVaccineSchedule: VaccineSchedule = {
+  id: 'vs1',
+  name: 'National Immunization Schedule (NIS) India',
+  description: 'Standard immunization schedule recommended for children in India',
+  recommendedVaccines: [
+    {
+      ageRange: 'At birth',
+      vaccines: ['v1', 'v2', 'v3'] // BCG, OPV, Hepatitis B
+    },
+    {
+      ageRange: '6 weeks',
+      vaccines: ['v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'] // OPV, Hep B, DPT, Hib, Rotavirus, PCV, IPV
+    },
+    {
+      ageRange: '10 weeks',
+      vaccines: ['v2', 'v3', 'v4', 'v5', 'v6', 'v7'] // OPV, Hep B, DPT, Hib, Rotavirus, PCV
+    },
+    {
+      ageRange: '14 weeks',
+      vaccines: ['v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'] // OPV, Hep B, DPT, Hib, Rotavirus, PCV, IPV
+    },
+    {
+      ageRange: '9-12 months',
+      vaccines: ['v9'] // Measles
+    },
+    {
+      ageRange: '12-15 months',
+      vaccines: ['v7', 'v11'] // PCV booster, JE 1st dose
+    },
+    {
+      ageRange: '16-24 months',
+      vaccines: ['v4', 'v10', 'v11'] // DPT booster, MMR, JE 2nd dose
+    },
+    {
+      ageRange: '5-6 years',
+      vaccines: ['v4', 'v10'] // DPT booster, MMR
+    },
+    {
+      ageRange: '10-16 years',
+      vaccines: ['v12'] // Typhoid
+    }
+  ]
+};
+
+// Mock children data
+export const mockChildren: Child[] = [
+  {
+    id: 'c1',
+    name: 'Arjun Sharma',
+    dateOfBirth: '2022-05-15',
+    gender: 'male',
+    weight: 12.5,
+    height: 85,
+    headCircumference: 48.2,
+    bloodGroup: 'O+',
+    allergies: [],
+    medicalConditions: [],
+    parentId: '1',
+    vaccineHistory: [
+      {
+        id: 'vd1',
+        vaccineId: 'v1',
+        doseNumber: 1,
+        dateAdministered: '2022-05-15',
+        administeredBy: 'Dr. Sharma',
+        notes: 'No adverse reactions'
+      },
+      {
+        id: 'vd2',
+        vaccineId: 'v2',
+        doseNumber: 1,
+        dateAdministered: '2022-05-15',
+        administeredBy: 'Dr. Sharma',
+        notes: 'No adverse reactions'
+      },
+      {
+        id: 'vd3',
+        vaccineId: 'v3',
+        doseNumber: 1,
+        dateAdministered: '2022-05-15',
+        administeredBy: 'Dr. Sharma',
+        notes: 'No adverse reactions'
+      }
+    ]
+  },
+  {
+    id: 'c2',
+    name: 'Meera Patel',
+    dateOfBirth: '2021-11-03',
+    gender: 'female',
+    weight: 15.2,
+    height: 92,
+    headCircumference: 49.5,
+    bloodGroup: 'A+',
+    allergies: ['Penicillin'],
+    medicalConditions: [],
+    parentId: '1',
+    vaccineHistory: [
+      {
+        id: 'vd4',
+        vaccineId: 'v1',
+        doseNumber: 1,
+        dateAdministered: '2021-11-03',
+        administeredBy: 'Dr. Sharma',
+        notes: 'No adverse reactions'
+      },
+      {
+        id: 'vd5',
+        vaccineId: 'v2',
+        doseNumber: 1,
+        dateAdministered: '2021-11-03',
+        administeredBy: 'Dr. Sharma',
+        notes: 'No adverse reactions'
+      }
+    ]
+  }
+]; 

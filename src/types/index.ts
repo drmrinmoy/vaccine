@@ -68,4 +68,53 @@ export interface UserProfile {
   achievements: Achievement[];
   streakDays: number;
   lastActive: string;
+  children?: Child[];
+  role?: 'doctor' | 'parent';
+}
+
+export interface Vaccine {
+  id: string;
+  name: string;
+  description: string;
+  diseases: string[];
+  recommendedAges: string[];
+  doseCount: number;
+  catchupAges?: string[];
+  sideEffects?: string[];
+  contraindications?: string[];
+  image?: string;
+}
+
+export interface VaccineDose {
+  id: string;
+  vaccineId: string;
+  doseNumber: number;
+  dateAdministered?: string;
+  administeredBy?: string;
+  notes?: string;
+}
+
+export interface Child {
+  id: string;
+  name: string;
+  dateOfBirth: string;
+  gender: 'male' | 'female' | 'other';
+  weight?: number;
+  height?: number;
+  headCircumference?: number;
+  bloodGroup?: string;
+  allergies?: string[];
+  medicalConditions?: string[];
+  parentId?: string;
+  vaccineHistory: VaccineDose[];
+}
+
+export interface VaccineSchedule {
+  id: string;
+  name: string;
+  description: string;
+  recommendedVaccines: {
+    ageRange: string;
+    vaccines: string[];
+  }[];
 } 
