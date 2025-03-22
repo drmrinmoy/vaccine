@@ -117,4 +117,57 @@ export interface VaccineSchedule {
     ageRange: string;
     vaccines: string[];
   }[];
+}
+
+export interface DrugInformation {
+  id: string;
+  name: string;
+  genericName: string;
+  category: string;
+  description: string;
+  indications: string[];
+  contraindications: string[];
+  sideEffects: string[];
+  dosages: {
+    ageRange: string;
+    weightRange?: string;
+    dose: string;
+    frequency: string;
+    route: string;
+    maxDose?: string;
+    notes?: string;
+  }[];
+  interactions?: string[];
+  warnings?: string[];
+  image?: string;
+}
+
+export interface ClinicalParameter {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  unit: string;
+  normalRanges: {
+    ageRange: string;
+    gender?: 'male' | 'female' | 'all';
+    weightRange?: string;
+    minValue: number;
+    maxValue: number;
+    notes?: string;
+  }[];
+  interpretations?: {
+    condition: string;
+    range: string;
+    interpretation: string;
+  }[];
+  image?: string;
+}
+
+export interface ClinicalCategory {
+  id: string;
+  name: string;
+  description: string;
+  parameters: string[]; // IDs of clinical parameters in this category
+  icon: string;
 } 

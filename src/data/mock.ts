@@ -1,4 +1,4 @@
-import { Recipe, MealPlan, NutritionTip, Achievement, UserProfile, Vaccine, Child, VaccineSchedule } from '@/types';
+import { Recipe, MealPlan, NutritionTip, Achievement, UserProfile, Vaccine, Child, VaccineSchedule, DrugInformation, ClinicalParameter, ClinicalCategory } from '@/types';
 
 export const mockRecipes: Recipe[] = [
   {
@@ -415,4 +415,389 @@ export const mockChildren: Child[] = [
       }
     ]
   }
-]; 
+];
+
+// Mock data for drug information
+export const mockDrugInformation: DrugInformation[] = [
+  {
+    id: 'd1',
+    name: 'Amoxicillin',
+    genericName: 'Amoxicillin',
+    category: 'Antibiotics',
+    description: 'A penicillin antibiotic that fights bacteria in your body. Used to treat many different types of infection.',
+    indications: ['Respiratory tract infections', 'Ear infections', 'Urinary tract infections', 'Skin infections'],
+    contraindications: ['Allergy to penicillin', 'Mononucleosis'],
+    sideEffects: ['Diarrhea', 'Stomach upset', 'Vomiting', 'Rash'],
+    dosages: [
+      {
+        ageRange: '0-3 months',
+        dose: '20-30 mg/kg/day',
+        frequency: 'divided every 12 hours',
+        route: 'oral',
+        maxDose: '30 mg/kg/day',
+      },
+      {
+        ageRange: '4 months-18 years',
+        dose: '25-45 mg/kg/day',
+        frequency: 'divided every 8-12 hours',
+        route: 'oral',
+        maxDose: '90 mg/kg/day',
+      }
+    ],
+    interactions: ['Probenecid', 'Allopurinol', 'Oral contraceptives'],
+    warnings: ['May reduce efficacy of oral contraceptives', 'May cause Clostridium difficile-associated diarrhea']
+  },
+  {
+    id: 'd2',
+    name: 'Paracetamol',
+    genericName: 'Acetaminophen',
+    category: 'Analgesics/Antipyretics',
+    description: 'Used to treat mild to moderate pain and fever. It has little anti-inflammatory effect.',
+    indications: ['Fever', 'Mild to moderate pain', 'Headache', 'Toothache'],
+    contraindications: ['Severe liver disease', 'Known hypersensitivity'],
+    sideEffects: ['Nausea', 'Rash', 'Liver damage (with overdose)'],
+    dosages: [
+      {
+        ageRange: '0-3 months',
+        weightRange: '<5kg',
+        dose: '10-15 mg/kg',
+        frequency: 'every 6-8 hours as needed',
+        route: 'oral',
+        maxDose: '60 mg/kg/day',
+      },
+      {
+        ageRange: '3 months-12 years',
+        dose: '10-15 mg/kg',
+        frequency: 'every 4-6 hours as needed',
+        route: 'oral',
+        maxDose: '75 mg/kg/day not to exceed 4000 mg/day',
+        notes: 'Maximum of 5 doses in 24 hours'
+      },
+      {
+        ageRange: '>12 years',
+        dose: '325-650 mg',
+        frequency: 'every 4-6 hours as needed',
+        route: 'oral',
+        maxDose: '4000 mg/day',
+        notes: 'Maximum of 5 doses in 24 hours'
+      }
+    ],
+    warnings: ['Avoid alcohol', 'Chronic use may cause liver damage', 'Do not exceed recommended dose']
+  },
+  {
+    id: 'd3',
+    name: 'Salbutamol',
+    genericName: 'Albuterol',
+    category: 'Bronchodilators',
+    description: 'A bronchodilator that relaxes muscles in the airways and increases air flow to the lungs.',
+    indications: ['Asthma', 'Bronchospasm', 'Exercise-induced bronchoconstriction'],
+    contraindications: ['Hypersensitivity to albuterol'],
+    sideEffects: ['Tremor', 'Nervousness', 'Headache', 'Tachycardia'],
+    dosages: [
+      {
+        ageRange: '<4 years',
+        dose: '0.1-0.15 mg/kg/dose',
+        frequency: 'every 4-6 hours as needed',
+        route: 'nebulization',
+        maxDose: '2.5 mg/dose',
+      },
+      {
+        ageRange: '4-11 years',
+        dose: '2.5 mg/dose',
+        frequency: 'every 4-6 hours as needed',
+        route: 'nebulization',
+        maxDose: '2.5 mg/dose',
+      },
+      {
+        ageRange: '>12 years',
+        dose: '2.5-5 mg/dose',
+        frequency: 'every 4-6 hours as needed',
+        route: 'nebulization',
+        maxDose: '5 mg/dose',
+      }
+    ],
+    warnings: ['May worsen cardiac conditions', 'Excessive use may lead to tolerance']
+  }
+];
+
+// Mock data for clinical parameters
+export const mockClinicalParameters: ClinicalParameter[] = [
+  {
+    id: 'cp1',
+    name: 'Hemoglobin',
+    category: 'Hematology',
+    description: 'Protein in red blood cells that carries oxygen throughout the body',
+    unit: 'g/dL',
+    normalRanges: [
+      {
+        ageRange: 'Newborn',
+        gender: 'all',
+        minValue: 14.0,
+        maxValue: 24.0
+      },
+      {
+        ageRange: '1 month',
+        gender: 'all',
+        minValue: 10.0,
+        maxValue: 20.0
+      },
+      {
+        ageRange: '2-6 months',
+        gender: 'all',
+        minValue: 10.0,
+        maxValue: 17.0
+      },
+      {
+        ageRange: '6 months-2 years',
+        gender: 'all',
+        minValue: 10.5,
+        maxValue: 13.5
+      },
+      {
+        ageRange: '2-12 years',
+        gender: 'all',
+        minValue: 11.5,
+        maxValue: 15.5
+      },
+      {
+        ageRange: '12-18 years',
+        gender: 'male',
+        minValue: 13.0,
+        maxValue: 16.0
+      },
+      {
+        ageRange: '12-18 years',
+        gender: 'female',
+        minValue: 12.0,
+        maxValue: 16.0
+      }
+    ],
+    interpretations: [
+      {
+        condition: 'Anemia',
+        range: 'Below normal range',
+        interpretation: 'May indicate iron deficiency, chronic disease, or blood loss.'
+      },
+      {
+        condition: 'Polycythemia',
+        range: 'Above normal range',
+        interpretation: 'May indicate dehydration, lung disease, or polycythemia vera.'
+      }
+    ]
+  },
+  {
+    id: 'cp2',
+    name: 'White Blood Cell Count',
+    category: 'Hematology',
+    description: 'Number of white blood cells that help the body fight infection',
+    unit: 'cells/mcL',
+    normalRanges: [
+      {
+        ageRange: 'Newborn',
+        gender: 'all',
+        minValue: 9000,
+        maxValue: 30000
+      },
+      {
+        ageRange: '1 month',
+        gender: 'all',
+        minValue: 5000,
+        maxValue: 21000
+      },
+      {
+        ageRange: '1-3 years',
+        gender: 'all',
+        minValue: 6000,
+        maxValue: 17500
+      },
+      {
+        ageRange: '4-7 years',
+        gender: 'all',
+        minValue: 5500,
+        maxValue: 15500
+      },
+      {
+        ageRange: '8-13 years',
+        gender: 'all',
+        minValue: 4500,
+        maxValue: 13500
+      },
+      {
+        ageRange: '14-18 years',
+        gender: 'all',
+        minValue: 4500,
+        maxValue: 11000
+      }
+    ],
+    interpretations: [
+      {
+        condition: 'Leukopenia',
+        range: 'Below normal range',
+        interpretation: 'May indicate bone marrow suppression, viral infection, or certain medications.'
+      },
+      {
+        condition: 'Leukocytosis',
+        range: 'Above normal range',
+        interpretation: 'May indicate bacterial infection, inflammation, or leukemia.'
+      }
+    ]
+  },
+  {
+    id: 'cp3',
+    name: 'Blood Glucose (Fasting)',
+    category: 'Biochemistry',
+    description: 'Level of glucose in the blood after fasting for at least 8 hours',
+    unit: 'mg/dL',
+    normalRanges: [
+      {
+        ageRange: 'All pediatric ages',
+        gender: 'all',
+        minValue: 70,
+        maxValue: 100
+      }
+    ],
+    interpretations: [
+      {
+        condition: 'Hypoglycemia',
+        range: '<70 mg/dL',
+        interpretation: 'Low blood sugar may indicate excess insulin, medication effects, or metabolic disorders.'
+      },
+      {
+        condition: 'Prediabetes',
+        range: '100-125 mg/dL',
+        interpretation: 'Impaired fasting glucose indicates increased risk for developing diabetes.'
+      },
+      {
+        condition: 'Diabetes',
+        range: '≥126 mg/dL',
+        interpretation: 'High fasting glucose may indicate diabetes when confirmed with repeat testing.'
+      }
+    ]
+  },
+  {
+    id: 'cp4',
+    name: 'Blood Pressure (Systolic/Diastolic)',
+    category: 'Vital Signs',
+    description: 'Pressure of blood against the walls of arteries',
+    unit: 'mmHg',
+    normalRanges: [
+      {
+        ageRange: 'Newborn-3 months',
+        gender: 'all',
+        minValue: 65,
+        maxValue: 85,
+        notes: 'Systolic, 45-55 mmHg Diastolic'
+      },
+      {
+        ageRange: '3-6 months',
+        gender: 'all',
+        minValue: 70,
+        maxValue: 90,
+        notes: 'Systolic, 50-65 mmHg Diastolic'
+      },
+      {
+        ageRange: '6-12 months',
+        gender: 'all',
+        minValue: 80,
+        maxValue: 100,
+        notes: 'Systolic, 55-65 mmHg Diastolic'
+      },
+      {
+        ageRange: '1-3 years',
+        gender: 'all',
+        minValue: 90,
+        maxValue: 105,
+        notes: 'Systolic, 55-70 mmHg Diastolic'
+      },
+      {
+        ageRange: '3-6 years',
+        gender: 'all',
+        minValue: 95,
+        maxValue: 110,
+        notes: 'Systolic, 60-75 mmHg Diastolic'
+      },
+      {
+        ageRange: '6-12 years',
+        gender: 'all',
+        minValue: 100,
+        maxValue: 120,
+        notes: 'Systolic, 60-75 mmHg Diastolic'
+      },
+      {
+        ageRange: '12-18 years',
+        gender: 'all',
+        minValue: 110,
+        maxValue: 120,
+        notes: 'Systolic, 65-80 mmHg Diastolic'
+      }
+    ],
+    interpretations: [
+      {
+        condition: 'Hypotension',
+        range: 'Below normal range',
+        interpretation: 'Low blood pressure may indicate dehydration, blood loss, or shock.'
+      },
+      {
+        condition: 'Prehypertension',
+        range: '90-95th percentile for age, gender, and height',
+        interpretation: 'Indicates increased risk for developing hypertension.'
+      },
+      {
+        condition: 'Hypertension',
+        range: '≥95th percentile for age, gender, and height',
+        interpretation: 'High blood pressure may indicate renal disease, endocrine disorders, or essential hypertension.'
+      }
+    ]
+  }
+];
+
+// Mock data for clinical categories
+export const mockClinicalCategories: ClinicalCategory[] = [
+  {
+    id: 'cc1',
+    name: 'Hematology',
+    description: 'Blood cell and component parameters',
+    parameters: ['cp1', 'cp2'],
+    icon: '🩸'
+  },
+  {
+    id: 'cc2',
+    name: 'Biochemistry',
+    description: 'Chemical components in blood and body fluids',
+    parameters: ['cp3'],
+    icon: '🧪'
+  },
+  {
+    id: 'cc3',
+    name: 'Vital Signs',
+    description: 'Essential body measurements',
+    parameters: ['cp4'],
+    icon: '📊'
+  },
+  {
+    id: 'cc4',
+    name: 'Antibiotics',
+    description: 'Medications that combat bacterial infections',
+    parameters: [],
+    icon: '💊'
+  },
+  {
+    id: 'cc5',
+    name: 'Analgesics',
+    description: 'Pain relievers and fever reducers',
+    parameters: [],
+    icon: '🌡️'
+  },
+  {
+    id: 'cc6',
+    name: 'Respiratory Medications',
+    description: 'Medications for respiratory conditions',
+    parameters: [],
+    icon: '🫁'
+  }
+];
+
+// Add drugs to their respective categories
+mockClinicalCategories.find(cat => cat.id === 'cc4')!.parameters.push('d1');
+mockClinicalCategories.find(cat => cat.id === 'cc5')!.parameters.push('d2');
+mockClinicalCategories.find(cat => cat.id === 'cc6')!.parameters.push('d3'); 
