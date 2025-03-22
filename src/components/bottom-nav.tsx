@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Home, Search, Book, User, Shield } from 'lucide-react';
+import { Home, Search } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 export function BottomNav() {
@@ -26,27 +26,6 @@ export function BottomNav() {
         >
           <Search size={24} />
           <span className="text-xs mt-1">Explore</span>
-        </Link>
-        <Link 
-          href="/vaccines" 
-          className={`flex flex-col items-center ${isActive('/vaccines') ? 'text-green-500' : 'text-gray-400 hover:text-white'}`}
-        >
-          <Shield size={24} />
-          <span className="text-xs mt-1">Vaccines</span>
-        </Link>
-        <Link 
-          href="/meal-plans" 
-          className={`flex flex-col items-center ${isActive('/meal-plans') ? 'text-green-500' : 'text-gray-400 hover:text-white'}`}
-        >
-          <Book size={24} />
-          <span className="text-xs mt-1">Meal Plans</span>
-        </Link>
-        <Link 
-          href="/profile" 
-          className={`flex flex-col items-center ${isActive('/profile') ? 'text-green-500' : 'text-gray-400 hover:text-white'}`}
-        >
-          <User size={24} />
-          <span className="text-xs mt-1">Profile</span>
         </Link>
       </div>
     </nav>
