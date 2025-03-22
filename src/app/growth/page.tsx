@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowLeft, TrendingUp, Edit, User, Info } from 'lucide-react';
@@ -36,7 +36,17 @@ ChartJS.register(
 
 type GrowthChartType = 'height' | 'weight' | 'head' | 'bmi';
 
+// Main component with Suspense boundary
 const GrowthPage = () => {
+  return (
+    <Suspense fallback={<div className="p-4 text-center">Loading growth charts...</div>}>
+      <GrowthContent />
+    </Suspense>
+  );
+};
+
+// Content component that uses useSearchParams
+const GrowthContent = () => {
   const searchParams = useSearchParams();
   const childId = searchParams.get('childId');
   
@@ -428,7 +438,7 @@ const GrowthPage = () => {
             <div className="flex items-start">
               <div className="w-2 h-2 rounded-full bg-green-500 mt-2 mr-2"></div>
               <p className="text-sm text-gray-300">
-                Your child's {activeChart === 'bmi' ? 'BMI' : activeChart} is currently at the {activeChart === 'height' ? '75th' : activeChart === 'weight' ? '65th' : activeChart === 'head' ? '55th' : '60th'} percentile, which is within the normal range.
+                Your child&apos;s {activeChart === 'bmi' ? 'BMI' : activeChart} is currently at the {activeChart === 'height' ? '75th' : activeChart === 'weight' ? '65th' : activeChart === 'head' ? '55th' : '60th'} percentile, which is within the normal range.
               </p>
             </div>
             <div className="flex items-start">

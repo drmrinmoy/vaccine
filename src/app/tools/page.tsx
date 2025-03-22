@@ -195,7 +195,7 @@ const ToolsPage = () => {
                 <div>
                   <h3 className="font-medium text-lg">Additional Tools</h3>
                   <p className="text-sm text-gray-400 mt-1">
-                    We're working on adding more clinical tools, including antibiotic dosing, 
+                    We&apos;re working on adding more clinical tools, including antibiotic dosing, 
                     resuscitation calculators, and developmental screening tools.
                   </p>
                 </div>

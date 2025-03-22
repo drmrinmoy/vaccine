@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, Info, Calculator } from 'lucide-react';
 import Link from 'next/link';
 import { BottomNav } from '@/components/bottom-nav';
@@ -22,13 +22,8 @@ const GIRCalculatorPage = () => {
   // Calculator info state
   const [showInfo, setShowInfo] = useState(false);
   
-  // Effect for automatic calculation when inputs change
-  useEffect(() => {
-    calculateGIR();
-  }, [weight, glucoseConcentration, flowRate, totalFluid, calculationMethod]);
-  
   // GIR Calculation function
-  const calculateGIR = () => {
+  const calculateGIR = useCallback(() => {
     // Reset results
     setGirResult(null);
     setDailyDextrose(null);
@@ -71,7 +66,12 @@ const GIRCalculatorPage = () => {
       const dailyDextroseGrams = (totalFluidValue * glucoseValue) / 100;
       setDailyDextrose(parseFloat(dailyDextroseGrams.toFixed(2)));
     }
-  };
+  }, [weight, glucoseConcentration, flowRate, totalFluid, calculationMethod]);
+  
+  // Effect for automatic calculation when inputs change
+  useEffect(() => {
+    calculateGIR();
+  }, [calculateGIR]);
   
   // Interpretation of GIR result
   const getGIRInterpretation = () => {
