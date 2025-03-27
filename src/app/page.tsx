@@ -6,20 +6,23 @@ import { RecipeCard } from '@/components/recipe-card';
 import { NutritionTipCard } from '@/components/nutrition-tip-card';
 import { AddChildForm } from '@/components/add-child-form';
 import { CompactVaccineSchedule } from '@/components/compact-vaccine-schedule';
+import { UpcomingVaccinesReminder } from '@/components/upcoming-vaccines-reminder';
 import { mockRecipes, mockNutritionTips, mockUserProfile, mockVaccines, mockVaccineSchedule, mockChildren } from '@/data/mock';
-import { TrendingUp, Shield, Plus, X, User, ChevronRight, Clipboard, Syringe, Utensils, Trash2, Edit } from 'lucide-react';
+import { TrendingUp, Shield, Plus, X, User, ChevronRight, Clipboard, Syringe, Utensils, Trash2, Edit, CheckCircle2, ChevronDown } from 'lucide-react';
 import { getVaccineRecommendations } from '@/utils/vaccine-utils';
 import { formatAge } from '@/utils/vaccine-utils';
 import { Child } from '@/types';
 import Link from 'next/link';
+import { VaccineStatusTracker } from '@/components/vaccine-status-tracker';
 
 export default function Home() {
   const [children, setChildren] = useState<Child[]>(mockChildren);
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [showAddChildForm, setShowAddChildForm] = useState(false);
-  const [activeTab, setActiveTab] = useState<'vaccines' | 'growth' | 'nutrition'>('vaccines');
+  const [activeTab, setActiveTab] = useState<'growth' | 'nutrition'>('growth');
   const [editMode, setEditMode] = useState(false);
   const [childToEdit, setChildToEdit] = useState<Child | null>(null);
+  const [showVaccineSection, setShowVaccineSection] = useState(false);
   
   // Growth parameters editing states
   const [isEditingHeight, setIsEditingHeight] = useState(false);
@@ -139,6 +142,47 @@ export default function Home() {
     setIsEditingHeight(false);
     setIsEditingWeight(false);
     setIsEditingHeadCircumference(false);
+  };
+  
+  // Handle updating vaccine status
+  const handleVaccineStatusUpdate = (vaccineDoses: Array<{
+    id: string;
+    vaccineId: string;
+    doseNumber: number;
+    dateAdministered?: string;
+    administeredBy?: string;
+    notes?: string;
+  }>) => {
+    if (!selectedChild) return;
+    
+    // Filter out any doses that might already exist (same vaccine ID and dose number)
+    const existingDoses = new Set(
+      selectedChild.vaccineHistory.map(dose => `${dose.vaccineId}-${dose.doseNumber}`)
+    );
+    
+    const newDoses = vaccineDoses.filter(
+      dose => !existingDoses.has(`${dose.vaccineId}-${dose.doseNumber}`)
+    );
+    
+    // Generate real IDs for new doses
+    const dosesWithIds = newDoses.map((dose, index) => ({
+      ...dose,
+      id: `vd${selectedChild.vaccineHistory.length + index + 1}`
+    }));
+    
+    // Update the child's vaccine history
+    const updatedChild = {
+      ...selectedChild,
+      vaccineHistory: [...selectedChild.vaccineHistory, ...dosesWithIds]
+    };
+    
+    // Update children array
+    setChildren(children.map(child => 
+      child.id === selectedChild.id ? updatedChild : child
+    ));
+    
+    // Update selected child
+    setSelectedChild(updatedChild);
   };
   
   // Initialize editing values when the selected child changes
@@ -317,19 +361,6 @@ export default function Home() {
                   <div className="border-b border-gray-800 mb-4">
                     <div className="flex space-x-4">
                       <button
-                        onClick={() => setActiveTab('vaccines')}
-                        className={`pb-2 px-1 ${
-                          activeTab === 'vaccines' 
-                            ? 'border-b-2 border-green-500 text-green-500' 
-                            : 'text-gray-400'
-                        }`}
-                      >
-                        <div className="flex items-center">
-                          <Syringe className="w-4 h-4 mr-1" />
-                          Vaccines
-                        </div>
-                      </button>
-                      <button
                         onClick={() => setActiveTab('growth')}
                         className={`pb-2 px-1 ${
                           activeTab === 'growth' 
@@ -360,46 +391,6 @@ export default function Home() {
                   
                   {/* Tab Content */}
                   <div>
-                    {activeTab === 'vaccines' && (
-                      <div className="space-y-4">
-                        {vaccineRecommendations.length > 0 ? (
-                          <CompactVaccineSchedule
-                            child={selectedChild}
-                            vaccineRecommendations={vaccineRecommendations}
-                            maxDisplay={6}
-                            showViewAll={true}
-                          />
-                        ) : (
-                          <div className="text-center py-6">
-                            <Shield className="w-12 h-12 text-green-500 mx-auto mb-2 opacity-50" />
-                            <p className="text-gray-400">No vaccines found for this child</p>
-                          </div>
-                        )}
-                        
-                        <div className="grid grid-cols-2 gap-4 mt-4">
-                          <Link href="/vaccines/schedule" className="flex flex-col items-center justify-center py-3 px-4 bg-gray-800 rounded-lg text-white hover:bg-gray-700 text-center">
-                            <Clipboard className="w-5 h-5 mb-1 text-green-500" />
-                            <span className="text-sm">Vaccine Schedule</span>
-                          </Link>
-                          
-                          <Link href="/vaccines/record" className="flex flex-col items-center justify-center py-3 px-4 bg-gray-800 rounded-lg text-white hover:bg-gray-700 text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 mb-1 text-green-500">
-                              <rect width="18" height="18" x="3" y="3" rx="2" />
-                              <path d="M7 7h.01" />
-                              <path d="M10.5 7h7" />
-                              <path d="M7 10.5h.01" />
-                              <path d="M10.5 10.5h7" />
-                              <path d="M7 14h.01" />
-                              <path d="M10.5 14h7" />
-                              <path d="M7 17.5h.01" />
-                              <path d="M10.5 17.5h7" />
-                            </svg>
-                            <span className="text-sm">Vaccination Record</span>
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                    
                     {activeTab === 'growth' && (
                       <div className="space-y-4">
                         <div className="grid grid-cols-3 gap-4">
@@ -712,6 +703,51 @@ export default function Home() {
                 </div>
               </div>
             )}
+          </section>
+        )}
+
+        {/* Expandable Vaccine Section - Only show when child is selected */}
+        {selectedChild && !showAddChildForm && (
+          <section className="mt-4">
+            <div className="bg-gray-900 rounded-lg border border-gray-800">
+              <button 
+                onClick={() => setShowVaccineSection(!showVaccineSection)}
+                className="w-full flex justify-between items-center p-4"
+              >
+                <div className="flex items-center">
+                  <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                    <Syringe className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold">Quick Complete Vaccines</h2>
+                    <p className="text-sm text-gray-400">Mark vaccines as completed by age group</p>
+                  </div>
+                </div>
+                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showVaccineSection ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {showVaccineSection && (
+                <div className="p-4 border-t border-gray-800">
+                  <div className="p-4 bg-gray-800 rounded-lg">
+                    <h3 className="text-md font-medium mb-2 flex items-center">
+                      <CheckCircle2 className="w-5 h-5 mr-2 text-green-500" />
+                      Quick Complete By Age
+                    </h3>
+                    <p className="text-sm text-gray-400 mb-4">
+                      Save time by marking all vaccines as completed up to a certain age group.
+                      Perfect for catching up vaccination records when you've missed recording doses.
+                    </p>
+                    <Link
+                      href={`/vaccines/quick-complete?childId=${selectedChild.id}`}
+                      className="w-full flex items-center justify-center gap-2 p-3 bg-green-600 text-white rounded-md hover:bg-green-500"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Quick Complete Vaccines By Age</span>
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
           </section>
         )}
 

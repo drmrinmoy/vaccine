@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "YumGrow - Personalized Nutrition for Kids",
-  description: "A fun and interactive nutrition app for children in India",
+  title: "YPed - Pediatrics AI",
+  description: "Pediatrics AI by YMed AI engine",
 };
 
 export default function RootLayout({

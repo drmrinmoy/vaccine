@@ -111,7 +111,7 @@ export const mockAchievements: Achievement[] = [
 
 export const mockUserProfile: UserProfile = {
   id: '1',
-  name: 'Vasu',
+  name: 'Doctor',
   age: 8,
   region: 'Maharashtra',
   dietaryPreferences: ['Vegetarian'],

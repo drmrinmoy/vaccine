@@ -45,7 +45,7 @@ export function formatAge(dateOfBirth: string): string {
 }
 
 // Helper function to determine if a vaccine is due based on age range
-function isInAgeRange(ageInMonths: number, ageRange: string): boolean {
+export function isInAgeRange(ageInMonths: number, ageRange: string): boolean {
   if (ageRange === 'At birth') {
     return ageInMonths >= 0;
   }
@@ -216,7 +216,7 @@ function getMaxAgeInMonths(ageRange: string): number {
 }
 
 // Helper function to estimate due date based on birth date and age range
-function getEstimatedDueDate(dateOfBirth: string, ageRange: string): string {
+export function getEstimatedDueDate(dateOfBirth: string, ageRange: string): string {
   const birthDate = new Date(dateOfBirth);
   
   if (ageRange === 'At birth') {

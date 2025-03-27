@@ -8,10 +8,11 @@ import { VaccineDetail } from '@/components/vaccine-detail';
 import { AddChildForm } from '@/components/add-child-form';
 import { AddVaccineForm } from '@/components/add-vaccine-form';
 import { VaccineRecommendation } from '@/components/vaccine-recommendation';
+import { QuickVaccineEntry } from '@/components/quick-vaccine-entry';
 import { getVaccineRecommendations, getCatchupVaccineRecommendations } from '@/utils/vaccine-utils';
 import { mockVaccines, mockVaccineSchedule, mockChildren } from '@/data/mock';
 import { Child, Vaccine, VaccineDose } from '@/types';
-import { Plus, Search, ArrowLeft, Shield } from 'lucide-react';
+import { Plus, Search, ArrowLeft, Shield, FastForward } from 'lucide-react';
 
 export default function VaccinesPage() {
   // State for children and vaccines
@@ -23,6 +24,7 @@ export default function VaccinesPage() {
   // UI state
   const [showAddChildForm, setShowAddChildForm] = useState(false);
   const [showAddVaccineForm, setShowAddVaccineForm] = useState(false);
+  const [showQuickEntry, setShowQuickEntry] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'due' | 'overdue' | 'upcoming' | 'completed'>('all');
   
@@ -58,6 +60,29 @@ export default function VaccinesPage() {
     
     setSelectedChild(updatedChild);
     setShowAddVaccineForm(false);
+  };
+  
+  // Handle adding multiple vaccine doses at once
+  const handleAddMultipleVaccineDoses = (doses: Omit<VaccineDose, 'id'>[]) => {
+    if (!selectedChild) return;
+    
+    // Generate IDs for each new dose
+    const newDoses: VaccineDose[] = doses.map((dose, index) => ({
+      ...dose,
+      id: `vd${selectedChild.vaccineHistory.length + index + 1}`
+    }));
+    
+    const updatedChild = {
+      ...selectedChild,
+      vaccineHistory: [...selectedChild.vaccineHistory, ...newDoses]
+    };
+    
+    setChildren(children.map(child => 
+      child.id === selectedChild.id ? updatedChild : child
+    ));
+    
+    setSelectedChild(updatedChild);
+    setShowQuickEntry(false);
   };
   
   // Filter vaccines based on search query
@@ -183,14 +208,29 @@ export default function VaccinesPage() {
               <ChildCard child={selectedChild} />
               
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Vaccine Recommendations</h2>
-                <button
-                  onClick={() => setShowAddVaccineForm(true)}
-                  className="flex items-center space-x-1 bg-green-600 text-white px-3 py-1 rounded-md"
-                >
-                  <Plus className="w-4 h-4" />
-                  <span>Add Vaccine</span>
-                </button>
+                <h2 className="text-xl font-semibold">Vaccine Management</h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      setShowQuickEntry(true);
+                      setShowAddVaccineForm(false);
+                    }}
+                    className="flex items-center space-x-1 bg-blue-600 text-white px-3 py-1 rounded-md"
+                  >
+                    <FastForward className="w-4 h-4" />
+                    <span>Quick Entry</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowAddVaccineForm(true);
+                      setShowQuickEntry(false);
+                    }}
+                    className="flex items-center space-x-1 bg-green-600 text-white px-3 py-1 rounded-md"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Add Vaccine</span>
+                  </button>
+                </div>
               </div>
               
               {showAddVaccineForm ? (
@@ -199,6 +239,13 @@ export default function VaccinesPage() {
                   vaccines={vaccines}
                   onSubmit={handleAddVaccineDose}
                   onCancel={() => setShowAddVaccineForm(false)}
+                />
+              ) : showQuickEntry ? (
+                <QuickVaccineEntry
+                  child={selectedChild}
+                  vaccines={vaccines}
+                  vaccineSchedule={mockVaccineSchedule}
+                  onAddVaccineDoses={handleAddMultipleVaccineDoses}
                 />
               ) : (
                 <>
