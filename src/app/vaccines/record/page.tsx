@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { mockChildren, mockVaccines, mockVaccineSchedule } from '@/data/mock';
 import { Child, VaccineDose } from '@/types';
 import { BottomNav } from '@/components/bottom-nav';
@@ -11,7 +11,8 @@ import { ChevronLeft, Plus, User } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
-export default function VaccineRecordPage() {
+// Client component that uses useSearchParams hook
+function VaccineRecordContent() {
   const [children, setChildren] = useState(mockChildren);
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [activeTab, setActiveTab] = useState<'all-records' | 'age-groups' | 'quick-entry'>('quick-entry');
@@ -228,5 +229,25 @@ export default function VaccineRecordPage() {
       
       <BottomNav />
     </div>
+  );
+}
+
+// Loading fallback component
+function LoadingFallback() {
+  return (
+    <div className="p-8 flex justify-center items-center">
+      <div className="text-center">
+        <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-400">Loading vaccine records...</p>
+      </div>
+    </div>
+  );
+}
+
+export default function VaccineRecordPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <VaccineRecordContent />
+    </Suspense>
   );
 } 

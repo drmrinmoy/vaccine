@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { QuickVaccineEntry } from '@/components/quick-vaccine-entry';
@@ -8,7 +8,8 @@ import { mockChildren, mockVaccines, mockVaccineSchedule } from '@/data/mock';
 import { ArrowLeft, Check, CheckCircle2, Clock, Shield } from 'lucide-react';
 import { Child, VaccineDose } from '@/types';
 
-export default function QuickCompletePage() {
+// Client component that uses useSearchParams
+function QuickCompleteContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const childIdParam = searchParams.get('childId');
@@ -171,6 +172,27 @@ export default function QuickCompletePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading fallback component
+function LoadingFallback() {
+  return (
+    <div className="p-8 flex justify-center items-center">
+      <div className="text-center">
+        <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-gray-400">Loading vaccine data...</p>
+      </div>
+    </div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function QuickCompletePage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <QuickCompleteContent />
+    </Suspense>
   );
 }
 
