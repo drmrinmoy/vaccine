@@ -3,210 +3,232 @@
 import React, { useState, useEffect } from 'react';
 import { BottomNav } from '@/components/bottom-nav';
 import { RecipeCard } from '@/components/recipe-card';
-import { NutritionTipCard } from '@/components/nutrition-tip-card';
-import { AddChildForm } from '@/components/add-child-form';
-import { CompactVaccineSchedule } from '@/components/compact-vaccine-schedule';
-import { UpcomingVaccinesReminder } from '@/components/upcoming-vaccines-reminder';
-import { mockRecipes, mockNutritionTips, mockUserProfile, mockVaccines, mockVaccineSchedule, mockChildren } from '@/data/mock';
+import { SurgicalGuidelineCard } from '@/components/surgical-guideline-card';
+import { AddPatientForm } from '@/components/add-patient-form';
+import { CompactSurgicalSchedule } from '@/components/compact-surgical-schedule';
+import { UpcomingSurgeriesReminder } from '@/components/upcoming-surgeries-reminder';
+import { mockSurgicalGuidelines, mockUserProfile, mockProcedures, mockSurgicalSchedule, mockPatients } from '@/data/mock';
 import { TrendingUp, Shield, Plus, X, User, ChevronRight, Clipboard, Syringe, Utensils, Trash2, Edit, CheckCircle2, ChevronDown } from 'lucide-react';
-import { getVaccineRecommendations } from '@/utils/vaccine-utils';
-import { formatAge } from '@/utils/vaccine-utils';
-import { Child } from '@/types';
+import { getProcedureRecommendations } from '@/utils/procedure-utils';
+import { formatAge } from '@/utils/procedure-utils';
+import { Patient } from '@/types';
 import Link from 'next/link';
-import { VaccineStatusTracker } from '@/components/vaccine-status-tracker';
+import { ProcedureStatusTracker } from '@/components/procedure-status-tracker';
 
 export default function Home() {
-  const [children, setChildren] = useState<Child[]>(mockChildren);
-  const [selectedChild, setSelectedChild] = useState<Child | null>(null);
-  const [showAddChildForm, setShowAddChildForm] = useState(false);
-  const [activeTab, setActiveTab] = useState<'growth' | 'nutrition'>('growth');
+  const [patients, setPatients] = useState<Patient[]>(mockPatients);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [showAddPatientForm, setShowAddPatientForm] = useState(false);
+  const [activeTab, setActiveTab] = useState<'vitals' | 'surgical'>('vitals');
   const [editMode, setEditMode] = useState(false);
-  const [childToEdit, setChildToEdit] = useState<Child | null>(null);
-  const [showVaccineSection, setShowVaccineSection] = useState(false);
+  const [patientToEdit, setPatientToEdit] = useState<Patient | null>(null);
+  const [showProcedureSection, setShowProcedureSection] = useState(false);
   
-  // Growth parameters editing states
+  // Vitals editing states
   const [isEditingHeight, setIsEditingHeight] = useState(false);
   const [isEditingWeight, setIsEditingWeight] = useState(false);
-  const [isEditingHeadCircumference, setIsEditingHeadCircumference] = useState(false);
+  const [isEditingBP, setIsEditingBP] = useState(false);
   const [heightValue, setHeightValue] = useState('');
   const [weightValue, setWeightValue] = useState('');
-  const [headCircumferenceValue, setHeadCircumferenceValue] = useState('');
+  const [bpValue, setBpValue] = useState('');
   
-  // Set the first child as selected by default if available
+  // Set the first patient as selected by default if available
   useEffect(() => {
-    if (children.length > 0 && !selectedChild) {
-      setSelectedChild(children[0]);
-      // Set active tab to 'growth' by default when a child is selected
-      setActiveTab('growth');
+    if (patients.length > 0 && !selectedPatient) {
+      setSelectedPatient(patients[0]);
+      // Set active tab to 'vitals' by default when a patient is selected
+      setActiveTab('vitals');
     }
-  }, [children, selectedChild]);
+  }, [patients, selectedPatient]);
   
-  // Function to select a child and show their details
-  const handleSelectChild = (child: Child) => {
-    setSelectedChild(child);
-    setActiveTab('growth'); // Switch to growth tab when selecting a child
+  // Function to select a patient and show their details
+  const handleSelectPatient = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setActiveTab('vitals'); // Switch to vitals tab when selecting a patient
   };
   
-  // Get vaccine recommendations for the selected child
-  const vaccineRecommendations = selectedChild 
-    ? getVaccineRecommendations(selectedChild, mockVaccines, mockVaccineSchedule)
+  // Get procedure recommendations for the selected patient
+  const procedureRecommendations = selectedPatient 
+    ? getProcedureRecommendations(selectedPatient, mockProcedures, mockSurgicalSchedule)
     : [];
 
-  // Handle adding a new child
-  const handleAddChild = (newChild: Omit<Child, 'id' | 'vaccineHistory'>) => {
-    if (editMode && childToEdit) {
-      // Update existing child
-      const updatedChildren = children.map(child => 
-        child.id === childToEdit.id 
+  // Handle adding a new patient
+  const handleAddPatient = (newPatient: Omit<Patient, 'id' | 'procedureHistory'>) => {
+    if (editMode && patientToEdit) {
+      // Update existing patient
+      const updatedPatients = patients.map(patient => 
+        patient.id === patientToEdit.id 
           ? { 
-              ...child, 
-              name: newChild.name,
-              dateOfBirth: newChild.dateOfBirth,
-              gender: newChild.gender,
-              weight: newChild.weight,
-              height: newChild.height,
-              headCircumference: newChild.headCircumference
+              ...patient, 
+              name: newPatient.name,
+              dateOfBirth: newPatient.dateOfBirth,
+              gender: newPatient.gender,
+              weight: newPatient.weight,
+              height: newPatient.height,
+              bloodPressure: newPatient.bloodPressure
             } 
-          : child
+          : patient
       );
       
-      setChildren(updatedChildren);
-      setSelectedChild(updatedChildren.find(child => child.id === childToEdit.id) || null);
-      setActiveTab('growth'); // Switch to growth tab after updating a child
+      setPatients(updatedPatients);
+      setSelectedPatient(updatedPatients.find(patient => patient.id === patientToEdit.id) || null);
+      setActiveTab('vitals'); // Switch to vitals tab after updating a patient
       setEditMode(false);
-      setChildToEdit(null);
+      setPatientToEdit(null);
     } else {
-      // Add new child
-      const newChildWithId: Child = {
-        ...newChild,
-        id: `c${children.length + 1}`,
-        vaccineHistory: []
+      // Add new patient
+      const newPatientWithId: Patient = {
+        ...newPatient,
+        id: `p${patients.length + 1}`,
+        procedureHistory: []
       };
       
-      setChildren([...children, newChildWithId]);
-      setSelectedChild(newChildWithId);
-      setActiveTab('growth'); // Switch to growth tab after adding a new child
+      setPatients([...patients, newPatientWithId]);
+      setSelectedPatient(newPatientWithId);
+      setActiveTab('vitals'); // Switch to vitals tab after adding a new patient
     }
     
-    setShowAddChildForm(false);
+    setShowAddPatientForm(false);
   };
 
-  // Handle clearing selected child
-  const handleClearSelectedChild = () => {
-    setSelectedChild(null);
+  // Handle clearing selected patient
+  const handleClearSelectedPatient = () => {
+    setSelectedPatient(null);
   };
   
-  // Handle deleting a child
-  const handleDeleteChild = (childId: string) => {
-    const updatedChildren = children.filter(child => child.id !== childId);
-    setChildren(updatedChildren);
+  // Handle deleting a patient
+  const handleDeletePatient = (patientId: string) => {
+    const updatedPatients = patients.filter(patient => patient.id !== patientId);
+    setPatients(updatedPatients);
     
-    if (selectedChild && selectedChild.id === childId) {
-      setSelectedChild(updatedChildren.length > 0 ? updatedChildren[0] : null);
+    if (selectedPatient && selectedPatient.id === patientId) {
+      setSelectedPatient(updatedPatients.length > 0 ? updatedPatients[0] : null);
     }
   };
   
-  // Handle editing a child
-  const handleEditChild = (child: Child) => {
-    setChildToEdit(child);
+  // Handle editing a patient
+  const handleEditPatient = (patient: Patient) => {
+    setPatientToEdit(patient);
     setEditMode(true);
-    setShowAddChildForm(true);
+    setShowAddPatientForm(true);
   };
   
   // Handle canceling the form
   const handleCancelForm = () => {
-    setShowAddChildForm(false);
+    setShowAddPatientForm(false);
     setEditMode(false);
-    setChildToEdit(null);
+    setPatientToEdit(null);
   };
 
-  // Handle updating growth parameters
-  const handleGrowthParamUpdate = (param: 'height' | 'weight' | 'headCircumference', value: string) => {
-    if (!selectedChild) return;
+  // Handle updating vital parameters
+  const handleVitalParamUpdate = (param: 'height' | 'weight' | 'bloodPressure', value: string) => {
+    if (!selectedPatient) return;
     
-    // Validate input
+    // Special handling for blood pressure
+    if (param === 'bloodPressure') {
+      // Basic validation for blood pressure format (e.g., "120/80")
+      if (!/^\d+\/\d+$/.test(value)) return;
+      
+      const updatedPatients = patients.map(patient => 
+        patient.id === selectedPatient.id 
+          ? { ...patient, [param]: value } 
+          : patient
+      );
+      
+      setPatients(updatedPatients);
+      setSelectedPatient(updatedPatients.find(patient => patient.id === selectedPatient.id) || null);
+      setIsEditingBP(false);
+      return;
+    }
+    
+    // Validate input for height and weight
     const numValue = parseFloat(value);
     if (isNaN(numValue) || numValue <= 0) return;
     
-    // Update the child with the new parameter value
-    const updatedChildren = children.map(child => 
-      child.id === selectedChild.id 
-        ? { ...child, [param]: numValue } 
-        : child
+    // Update the patient with the new parameter value
+    const updatedPatients = patients.map(patient => 
+      patient.id === selectedPatient.id 
+        ? { ...patient, [param]: numValue } 
+        : patient
     );
     
-    setChildren(updatedChildren);
-    setSelectedChild(updatedChildren.find(child => child.id === selectedChild.id) || null);
+    setPatients(updatedPatients);
+    setSelectedPatient(updatedPatients.find(patient => patient.id === selectedPatient.id) || null);
     
     // Reset editing states
     setIsEditingHeight(false);
     setIsEditingWeight(false);
-    setIsEditingHeadCircumference(false);
   };
   
-  // Handle updating vaccine status
-  const handleVaccineStatusUpdate = (vaccineDoses: Array<{
-    id: string;
-    vaccineId: string;
-    doseNumber: number;
-    dateAdministered?: string;
-    administeredBy?: string;
-    notes?: string;
-  }>) => {
-    if (!selectedChild) return;
+  // Handle updating procedure status
+  const handleProcedureStatusUpdate = (procedureId: string, status: 'Scheduled' | 'Completed' | 'Cancelled', date?: string) => {
+    if (!selectedPatient) return;
     
-    // Filter out any doses that might already exist (same vaccine ID and dose number)
-    const existingDoses = new Set(
-      selectedChild.vaccineHistory.map(dose => `${dose.vaccineId}-${dose.doseNumber}`)
+    // Check if the procedure exists in the patient's history
+    const existingProcedureIndex = selectedPatient.procedureHistory.findIndex(
+      proc => proc.procedureId === procedureId
     );
     
-    const newDoses = vaccineDoses.filter(
-      dose => !existingDoses.has(`${dose.vaccineId}-${dose.doseNumber}`)
-    );
+    let updatedHistory;
     
-    // Generate real IDs for new doses
-    const dosesWithIds = newDoses.map((dose, index) => ({
-      ...dose,
-      id: `vd${selectedChild.vaccineHistory.length + index + 1}`
-    }));
+    if (existingProcedureIndex >= 0) {
+      // Update existing procedure
+      updatedHistory = [...selectedPatient.procedureHistory];
+      updatedHistory[existingProcedureIndex] = {
+        ...updatedHistory[existingProcedureIndex],
+        status,
+        ...(status === 'Scheduled' && date ? { dateScheduled: date } : {}),
+        ...(status === 'Completed' && date ? { datePerformed: date } : {})
+      };
+    } else {
+      // Add new procedure
+      const newProcedure = {
+        id: `proc${selectedPatient.procedureHistory.length + 1}`,
+        procedureId,
+        status,
+        ...(status === 'Scheduled' && date ? { dateScheduled: date } : {}),
+        ...(status === 'Completed' && date ? { datePerformed: date } : {})
+      };
+      updatedHistory = [...selectedPatient.procedureHistory, newProcedure];
+    }
     
-    // Update the child's vaccine history
-    const updatedChild = {
-      ...selectedChild,
-      vaccineHistory: [...selectedChild.vaccineHistory, ...dosesWithIds]
+    // Update the patient's procedure history
+    const updatedPatient = {
+      ...selectedPatient,
+      procedureHistory: updatedHistory
     };
     
-    // Update children array
-    setChildren(children.map(child => 
-      child.id === selectedChild.id ? updatedChild : child
+    // Update patients array
+    setPatients(patients.map(patient => 
+      patient.id === selectedPatient.id ? updatedPatient : patient
     ));
     
-    // Update selected child
-    setSelectedChild(updatedChild);
+    // Update selected patient
+    setSelectedPatient(updatedPatient);
   };
   
-  // Initialize editing values when the selected child changes
+  // Initialize editing values when the selected patient changes
   useEffect(() => {
-    if (selectedChild) {
-      setHeightValue(selectedChild.height?.toString() || '');
-      setWeightValue(selectedChild.weight?.toString() || '');
-      setHeadCircumferenceValue(selectedChild.headCircumference?.toString() || '');
+    if (selectedPatient) {
+      setHeightValue(selectedPatient.height?.toString() || '');
+      setWeightValue(selectedPatient.weight?.toString() || '');
+      setBpValue(selectedPatient.bloodPressure || '');
     }
-  }, [selectedChild]);
+  }, [selectedPatient]);
   
   // Reset editing state for a parameter
-  const resetEditingState = (param: 'height' | 'weight' | 'headCircumference') => {
-    if (!selectedChild) return;
+  const resetEditingState = (param: 'height' | 'weight' | 'bloodPressure') => {
+    if (!selectedPatient) return;
     
     if (param === 'height') {
       setIsEditingHeight(false);
-      setHeightValue(selectedChild.height?.toString() || '');
+      setHeightValue(selectedPatient.height?.toString() || '');
     } else if (param === 'weight') {
       setIsEditingWeight(false);
-      setWeightValue(selectedChild.weight?.toString() || '');
-    } else if (param === 'headCircumference') {
-      setIsEditingHeadCircumference(false);
-      setHeadCircumferenceValue(selectedChild.headCircumference?.toString() || '');
+      setWeightValue(selectedPatient.weight?.toString() || '');
+    } else if (param === 'bloodPressure') {
+      setIsEditingBP(false);
+      setBpValue(selectedPatient.bloodPressure || '');
     }
   };
 
@@ -219,40 +241,40 @@ export default function Home() {
   return (
     <div className="pb-16">
       {/* Hero Section */}
-      <section className="relative h-72 bg-gradient-to-b from-green-600 to-green-700">
+      <section className="relative h-72 bg-gradient-to-b from-blue-800 to-blue-900">
         <div className="absolute inset-0 bg-[url('/pattern.png')] opacity-10" />
         <div className="relative z-10 h-full flex flex-col justify-end p-6">
-          <p className="text-sm text-green-100">Welcome back!</p>
-          <h1 className="text-2xl font-bold">{mockUserProfile.name}&apos;s Dashboard</h1>
+          <p className="text-sm text-blue-100">Welcome back!</p>
+          <h1 className="text-2xl font-bold">{mockUserProfile.name}&apos;s Surgical Dashboard</h1>
           
-          {/* Quick Add Child Button */}
+          {/* Quick Add Patient Button */}
           <button
             onClick={() => {
               setEditMode(false);
-              setChildToEdit(null);
-              setShowAddChildForm(true);
+              setPatientToEdit(null);
+              setShowAddPatientForm(true);
             }}
-            className="mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-green-500 text-white rounded-lg shadow-lg hover:bg-green-400 transition-colors"
+            className="mt-4 flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-500 transition-colors"
           >
             <Plus className="w-5 h-5" />
-            <span className="font-medium">Add New Child</span>
+            <span className="font-medium">Add New Patient</span>
           </button>
           
-          {/* Child Selection Area */}
-          {children.length > 0 && (
+          {/* Patient Selection Area */}
+          {patients.length > 0 && (
             <div className="mt-4 flex items-center gap-2 overflow-x-auto pb-2">
-              {children.map(child => (
+              {patients.map(patient => (
                 <button
-                  key={child.id}
-                  onClick={() => handleSelectChild(child)}
+                  key={patient.id}
+                  onClick={() => handleSelectPatient(patient)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-full whitespace-nowrap ${
-                    selectedChild?.id === child.id 
-                      ? 'bg-green-500 text-white' 
-                      : 'bg-black/20 text-green-100'
+                    selectedPatient?.id === patient.id 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-black/20 text-blue-100'
                   }`}
                 >
                   <User className="w-4 h-4" />
-                  <span>{child.name}</span>
+                  <span>{patient.name}</span>
                 </button>
               ))}
             </div>
@@ -261,93 +283,93 @@ export default function Home() {
       </section>
 
       <div className="px-4 py-6 space-y-8">
-        {/* Add/Edit Child Form */}
-        {showAddChildForm && (
+        {/* Add/Edit Patient Form */}
+        {showAddPatientForm && (
           <section>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">
-                {editMode ? 'Edit Child' : 'Add New Child'}
+                {editMode ? 'Edit Patient' : 'Add New Patient'}
               </h2>
             </div>
-            <AddChildForm 
-              onSubmit={handleAddChild}
+            <AddPatientForm 
+              onSubmit={handleAddPatient}
               onCancel={handleCancelForm}
-              initialData={editMode && childToEdit ? {
-                name: childToEdit.name,
-                dateOfBirth: childToEdit.dateOfBirth,
-                gender: childToEdit.gender,
-                weight: childToEdit.weight,
-                height: childToEdit.height,
-                headCircumference: childToEdit.headCircumference
+              initialData={editMode && patientToEdit ? {
+                name: patientToEdit.name,
+                dateOfBirth: patientToEdit.dateOfBirth,
+                gender: patientToEdit.gender,
+                weight: patientToEdit.weight,
+                height: patientToEdit.height,
+                bloodPressure: patientToEdit.bloodPressure
               } : undefined}
             />
           </section>
         )}
 
-        {!showAddChildForm && children.length > 0 && (
+        {!showAddPatientForm && patients.length > 0 && (
           <section>
-            {/* Child Tabs */}
+            {/* Patient Tabs */}
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Your Children</h2>
+              <h2 className="text-xl font-semibold">Your Patients</h2>
               <button 
                 onClick={() => {
                   setEditMode(false);
-                  setChildToEdit(null);
-                  setShowAddChildForm(true);
+                  setPatientToEdit(null);
+                  setShowAddPatientForm(true);
                 }}
-                className="text-sm text-green-400 flex items-center"
+                className="text-sm text-blue-400 flex items-center"
               >
                 <Plus className="w-4 h-4 mr-1" />
-                Add Child
+                Add Patient
               </button>
             </div>
             
-            {/* Child Selection Tabs */}
+            {/* Patient Selection Tabs */}
             <div className="flex space-x-2 overflow-x-auto pb-2 mb-6">
-              {children.map(child => (
+              {patients.map(patient => (
                 <button
-                  key={child.id}
-                  onClick={() => handleSelectChild(child)}
+                  key={patient.id}
+                  onClick={() => handleSelectPatient(patient)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg whitespace-nowrap ${
-                    selectedChild?.id === child.id 
-                      ? 'bg-green-600 text-white' 
+                    selectedPatient?.id === patient.id 
+                      ? 'bg-blue-600 text-white' 
                       : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
                   }`}
                 >
                   <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center">
                     <User className="w-3 h-3" />
                   </div>
-                  <span>{child.name}</span>
-                  {selectedChild?.id === child.id && (
-                    <span className="ml-1 text-xs bg-green-700 px-1.5 py-0.5 rounded-full">Selected</span>
+                  <span>{patient.name}</span>
+                  {selectedPatient?.id === patient.id && (
+                    <span className="ml-1 text-xs bg-blue-700 px-1.5 py-0.5 rounded-full">Selected</span>
                   )}
                 </button>
               ))}
             </div>
 
-            {/* Selected Child Information */}
-            {selectedChild && (
+            {/* Selected Patient Information */}
+            {selectedPatient && (
               <div className="bg-gray-900 rounded-lg border border-gray-800">
                 <div className="flex justify-between items-center p-4 border-b border-gray-800">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center mr-3">
+                    <div className="w-10 h-10 rounded-full bg-blue-700 flex items-center justify-center mr-3">
                       <User className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-semibold">{selectedChild.name}</h2>
-                      <p className="text-sm text-gray-400">{formatAge(selectedChild.dateOfBirth)} • {selectedChild.gender} • {selectedChild.bloodGroup || 'Unknown blood group'}</p>
+                      <h2 className="text-xl font-semibold">{selectedPatient.name}</h2>
+                      <p className="text-sm text-gray-400">{formatAge(selectedPatient.dateOfBirth)} • {selectedPatient.gender} • {selectedPatient.bloodGroup || 'Unknown blood group'}</p>
                     </div>
                   </div>
                   <div className="flex gap-2">
                     <button 
-                      onClick={() => handleEditChild(selectedChild)}
-                      className="text-sm text-green-400 flex items-center"
+                      onClick={() => handleEditPatient(selectedPatient)}
+                      className="text-sm text-blue-400 flex items-center"
                     >
                       <Edit className="w-4 h-4 mr-1" />
                       Edit
                     </button>
                     <button 
-                      onClick={() => handleDeleteChild(selectedChild.id)}
+                      onClick={() => handleDeletePatient(selectedPatient.id)}
                       className="text-sm text-red-400 flex items-center"
                     >
                       <Trash2 className="w-4 h-4 mr-1" />
@@ -361,29 +383,29 @@ export default function Home() {
                   <div className="border-b border-gray-800 mb-4">
                     <div className="flex space-x-4">
                       <button
-                        onClick={() => setActiveTab('growth')}
+                        onClick={() => setActiveTab('vitals')}
                         className={`pb-2 px-1 ${
-                          activeTab === 'growth' 
-                            ? 'border-b-2 border-green-500 text-green-500' 
+                          activeTab === 'vitals' 
+                            ? 'border-b-2 border-blue-500 text-blue-500' 
                             : 'text-gray-400'
                         }`}
                       >
                         <div className="flex items-center">
                           <TrendingUp className="w-4 h-4 mr-1" />
-                          Growth
+                          Vitals
                         </div>
                       </button>
                       <button
-                        onClick={() => setActiveTab('nutrition')}
+                        onClick={() => setActiveTab('surgical')}
                         className={`pb-2 px-1 ${
-                          activeTab === 'nutrition' 
-                            ? 'border-b-2 border-green-500 text-green-500' 
+                          activeTab === 'surgical' 
+                            ? 'border-b-2 border-blue-500 text-blue-500' 
                             : 'text-gray-400'
                         }`}
                       >
                         <div className="flex items-center">
-                          <Utensils className="w-4 h-4 mr-1" />
-                          Nutrition
+                          <Syringe className="w-4 h-4 mr-1" />
+                          Surgical
                         </div>
                       </button>
                     </div>
@@ -391,7 +413,7 @@ export default function Home() {
                   
                   {/* Tab Content */}
                   <div>
-                    {activeTab === 'growth' && (
+                    {activeTab === 'vitals' && (
                       <div className="space-y-4">
                         <div className="grid grid-cols-3 gap-4">
                           <div className="bg-gray-800 rounded-lg p-4">
@@ -429,31 +451,15 @@ export default function Home() {
                                     Cancel
                                   </button>
                                   <button 
-                                    onClick={() => handleGrowthParamUpdate('height', heightValue)}
-                                    className="px-2 py-1 bg-green-600 text-white text-xs rounded"
+                                    onClick={() => handleVitalParamUpdate('height', heightValue)}
+                                    className="px-2 py-1 bg-blue-600 text-white text-xs rounded"
                                   >
                                     Save
                                   </button>
                                 </div>
                               </div>
                             ) : (
-                              <p className="text-xl font-semibold">{selectedChild.height || '—'} cm</p>
-                            )}
-                            
-                            {selectedChild.height && !isEditingHeight && (
-                              <div className="mt-1">
-                                <p className="text-xs text-green-400">On track for age</p>
-                                <div className="mt-2 space-y-1">
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Z-score:</span>
-                                    <span className="text-xs font-medium">+0.8</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Percentile:</span>
-                                    <span className="text-xs font-medium">75th</span>
-                                  </div>
-                                </div>
-                              </div>
+                              <p className="text-xl font-semibold">{selectedPatient.height || '—'} cm</p>
                             )}
                           </div>
                           <div className="bg-gray-800 rounded-lg p-4">
@@ -491,93 +497,60 @@ export default function Home() {
                                     Cancel
                                   </button>
                                   <button 
-                                    onClick={() => handleGrowthParamUpdate('weight', weightValue)}
-                                    className="px-2 py-1 bg-green-600 text-white text-xs rounded"
+                                    onClick={() => handleVitalParamUpdate('weight', weightValue)}
+                                    className="px-2 py-1 bg-blue-600 text-white text-xs rounded"
                                   >
                                     Save
                                   </button>
                                 </div>
                               </div>
                             ) : (
-                              <p className="text-xl font-semibold">{selectedChild.weight || '—'} kg</p>
-                            )}
-                            
-                            {selectedChild.weight && !isEditingWeight && (
-                              <div className="mt-1">
-                                <p className="text-xs text-green-400">On track for age</p>
-                                <div className="mt-2 space-y-1">
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Z-score:</span>
-                                    <span className="text-xs font-medium">+0.5</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Percentile:</span>
-                                    <span className="text-xs font-medium">65th</span>
-                                  </div>
-                                </div>
-                              </div>
+                              <p className="text-xl font-semibold">{selectedPatient.weight || '—'} kg</p>
                             )}
                           </div>
                           <div className="bg-gray-800 rounded-lg p-4">
                             <div className="flex justify-between items-center">
-                              <p className="text-sm text-gray-400">Head</p>
-                              {!isEditingHeadCircumference && (
+                              <p className="text-sm text-gray-400">BP</p>
+                              {!isEditingBP && (
                                 <button 
-                                  onClick={() => setIsEditingHeadCircumference(true)}
+                                  onClick={() => setIsEditingBP(true)}
                                   className="p-1 bg-gray-700 rounded-full hover:bg-gray-600"
-                                  title="Edit head circumference"
+                                  title="Edit blood pressure"
                                 >
                                   <Edit className="w-3 h-3 text-gray-400" />
                                 </button>
                               )}
                             </div>
                             
-                            {isEditingHeadCircumference ? (
+                            {isEditingBP ? (
                               <div className="mt-1">
                                 <div className="flex items-center">
                                   <input
-                                    type="number"
-                                    value={headCircumferenceValue}
-                                    onChange={(e) => setHeadCircumferenceValue(e.target.value)}
+                                    type="text"
+                                    value={bpValue}
+                                    onChange={(e) => setBpValue(e.target.value)}
                                     className="w-full bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-lg"
-                                    min="0"
-                                    step="0.1"
+                                    placeholder="120/80"
                                   />
-                                  <span className="ml-1 text-gray-400">cm</span>
+                                  <span className="ml-1 text-gray-400">mmHg</span>
                                 </div>
                                 <div className="flex justify-end mt-2 space-x-2">
                                   <button 
-                                    onClick={() => resetEditingState('headCircumference')}
+                                    onClick={() => resetEditingState('bloodPressure')}
                                     className="px-2 py-1 bg-gray-700 text-xs rounded"
                                   >
                                     Cancel
                                   </button>
                                   <button 
-                                    onClick={() => handleGrowthParamUpdate('headCircumference', headCircumferenceValue)}
-                                    className="px-2 py-1 bg-green-600 text-white text-xs rounded"
+                                    onClick={() => handleVitalParamUpdate('bloodPressure', bpValue)}
+                                    className="px-2 py-1 bg-blue-600 text-white text-xs rounded"
                                   >
                                     Save
                                   </button>
                                 </div>
                               </div>
                             ) : (
-                              <p className="text-xl font-semibold">{selectedChild.headCircumference || '—'} cm</p>
-                            )}
-                            
-                            {selectedChild.headCircumference && !isEditingHeadCircumference && (
-                              <div className="mt-1">
-                                <p className="text-xs text-green-400">On track for age</p>
-                                <div className="mt-2 space-y-1">
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Z-score:</span>
-                                    <span className="text-xs font-medium">+0.2</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Percentile:</span>
-                                    <span className="text-xs font-medium">55th</span>
-                                  </div>
-                                </div>
-                              </div>
+                              <p className="text-xl font-semibold">{selectedPatient.bloodPressure || '—'} mmHg</p>
                             )}
                           </div>
                         </div>
@@ -585,23 +558,19 @@ export default function Home() {
                         <div className="grid grid-cols-2 gap-4">
                           <div className="bg-gray-800 rounded-lg p-4">
                             <p className="text-sm text-gray-400">BMI</p>
-                            {selectedChild.height && selectedChild.weight ? (
+                            {selectedPatient.height && selectedPatient.weight ? (
                               <div>
                                 <p className="text-xl font-semibold">
-                                  {calculateBMI(selectedChild.weight, selectedChild.height)}
+                                  {calculateBMI(selectedPatient.weight, selectedPatient.height)}
                                 </p>
                                 <div className="mt-2 space-y-1">
                                   <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Z-score:</span>
-                                    <span className="text-xs font-medium">+0.3</span>
+                                    <span className="text-xs text-gray-500">Category:</span>
+                                    <span className="text-xs font-medium text-blue-400">Normal</span>
                                   </div>
                                   <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Percentile:</span>
-                                    <span className="text-xs font-medium">60th</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Status:</span>
-                                    <span className="text-xs font-medium text-green-400">Normal</span>
+                                    <span className="text-xs text-gray-500">Surgical Risk:</span>
+                                    <span className="text-xs font-medium">Low</span>
                                   </div>
                                 </div>
                               </div>
@@ -611,89 +580,166 @@ export default function Home() {
                           </div>
                           
                           <div className="bg-gray-800 rounded-lg p-4">
-                            <p className="text-sm text-gray-400">Weight-for-Height</p>
-                            {selectedChild.height && selectedChild.weight ? (
-                              <div>
-                                <p className="text-xl font-semibold">Normal</p>
-                                <div className="mt-2 space-y-1">
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Z-score:</span>
-                                    <span className="text-xs font-medium">+0.4</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-xs text-gray-500">Percentile:</span>
-                                    <span className="text-xs font-medium">62nd</span>
-                                  </div>
+                            <p className="text-sm text-gray-400">ASA Class</p>
+                            <div>
+                              <p className="text-xl font-semibold">II</p>
+                              <div className="mt-2 space-y-1">
+                                <div className="flex justify-between">
+                                  <span className="text-xs text-gray-500">Mortality Risk:</span>
+                                  <span className="text-xs font-medium">0.4%</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-xs text-gray-500">Status:</span>
+                                  <span className="text-xs font-medium text-blue-400">Mild Systemic Disease</span>
                                 </div>
                               </div>
-                            ) : (
-                              <p className="text-xl font-semibold">—</p>
-                            )}
+                            </div>
                           </div>
                         </div>
                         
                         <div className="bg-gray-800 rounded-lg p-4">
                           <div className="flex justify-between items-center mb-3">
-                            <p className="text-sm text-gray-400">Growth Velocity</p>
-                            <span className="text-xs bg-green-900/50 text-green-400 px-2 py-1 rounded-full">Normal</span>
+                            <p className="text-sm text-gray-400">Recent Lab Values</p>
+                            <span className="text-xs bg-blue-900/50 text-blue-400 px-2 py-1 rounded-full">Updated 2 days ago</span>
                           </div>
                           <div className="grid grid-cols-3 gap-4">
                             <div>
-                              <p className="text-xs text-gray-500">Height Gain</p>
-                              <p className="text-sm font-medium">+2.5 cm</p>
-                              <p className="text-xs text-gray-500">last 3 months</p>
+                              <p className="text-xs text-gray-500">Hemoglobin</p>
+                              <p className="text-sm font-medium">14.2 g/dL</p>
+                              <p className="text-xs text-green-400">Normal</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">Weight Gain</p>
-                              <p className="text-sm font-medium">+1.2 kg</p>
-                              <p className="text-xs text-gray-500">last 3 months</p>
+                              <p className="text-xs text-gray-500">Creatinine</p>
+                              <p className="text-sm font-medium">0.8 mg/dL</p>
+                              <p className="text-xs text-green-400">Normal</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">Head Growth</p>
-                              <p className="text-sm font-medium">+0.5 cm</p>
-                              <p className="text-xs text-gray-500">last 3 months</p>
+                              <p className="text-xs text-gray-500">PT/INR</p>
+                              <p className="text-sm font-medium">1.1</p>
+                              <p className="text-xs text-green-400">Normal</p>
                             </div>
                           </div>
                         </div>
                         
-                        <Link href={`/growth?childId=${selectedChild?.id || ''}`} className="flex items-center justify-between py-3 px-4 bg-gray-800 rounded-lg text-white hover:bg-gray-700">
+                        <Link href={`/vitals?patientId=${selectedPatient?.id || ''}`} className="flex items-center justify-between py-3 px-4 bg-gray-800 rounded-lg text-white hover:bg-gray-700">
                           <div className="flex items-center">
-                            <TrendingUp className="w-5 h-5 mr-2 text-green-500" />
-                            <span>View Growth Charts & History</span>
+                            <TrendingUp className="w-5 h-5 mr-2 text-blue-500" />
+                            <span>View Complete Vitals & Lab History</span>
                           </div>
                           <ChevronRight className="w-5 h-5 text-gray-500" />
                         </Link>
                       </div>
                     )}
                     
-                    {activeTab === 'nutrition' && (
+                    {activeTab === 'surgical' && (
                       <div className="space-y-4">
                         <div className="bg-gray-800 rounded-lg p-4">
-                          <p className="text-sm text-gray-400 mb-2">Daily Nutrition Requirements</p>
+                          <p className="text-sm text-gray-400 mb-2">Surgical Assessment</p>
                           <div className="grid grid-cols-2 gap-4">
                             <div>
-                              <p className="text-xs text-gray-500">Calories</p>
-                              <p className="text-lg font-semibold">1400-1600 kcal</p>
+                              <p className="text-xs text-gray-500">Surgical Risk</p>
+                              <p className="text-lg font-semibold">Low</p>
+                              <p className="text-xs text-blue-400">Based on ASA class and comorbidities</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">Protein</p>
-                              <p className="text-lg font-semibold">25-35g</p>
+                              <p className="text-xs text-gray-500">Anesthesia Type</p>
+                              <p className="text-lg font-semibold">General</p>
+                              <p className="text-xs text-gray-500">Recommended</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">Carbohydrates</p>
-                              <p className="text-lg font-semibold">130-150g</p>
+                              <p className="text-xs text-gray-500">NPO Status</p>
+                              <p className="text-lg font-semibold">Clear for surgery</p>
+                              <p className="text-xs text-gray-500">Last meal: 10 hours ago</p>
                             </div>
                             <div>
-                              <p className="text-xs text-gray-500">Fats</p>
-                              <p className="text-lg font-semibold">40-50g</p>
+                              <p className="text-xs text-gray-500">Allergies</p>
+                              <p className="text-lg font-semibold">Penicillin</p>
+                              <p className="text-xs text-red-400">Verified</p>
                             </div>
                           </div>
                         </div>
                         
-                        <Link href="/meal-plans" className="flex items-center justify-between py-3 px-4 bg-gray-800 rounded-lg text-white hover:bg-gray-700">
+                        {/* Display procedure status tracker */}
+                        <ProcedureStatusTracker 
+                          patient={selectedPatient}
+                          procedures={mockProcedures}
+                          onProcedureUpdate={handleProcedureStatusUpdate}
+                        />
+                        
+                        <div className="bg-gray-800 rounded-lg p-4">
+                          <div className="flex justify-between items-center mb-3">
+                            <p className="text-sm text-gray-400">Surgical History</p>
+                            <button className="text-xs bg-blue-900/50 text-blue-400 px-2 py-1 rounded-full">
+                              Add New
+                            </button>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <div className="p-3 bg-gray-900 rounded-lg">
+                              <div className="flex justify-between mb-1">
+                                <p className="font-medium">Appendectomy</p>
+                                <p className="text-xs text-gray-500">2 years ago</p>
+                              </div>
+                              <p className="text-xs text-gray-400">Laparoscopic, uncomplicated</p>
+                              <div className="flex items-center mt-1">
+                                <span className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded mr-2">
+                                  Dr. Johnson
+                                </span>
+                                <span className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded">
+                                  Memorial Hospital
+                                </span>
+                              </div>
+                            </div>
+                            
+                            <div className="p-3 bg-gray-900 rounded-lg">
+                              <div className="flex justify-between mb-1">
+                                <p className="font-medium">Hernia Repair</p>
+                                <p className="text-xs text-gray-500">5 years ago</p>
+                              </div>
+                              <p className="text-xs text-gray-400">Right inguinal, mesh placement</p>
+                              <div className="flex items-center mt-1">
+                                <span className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded mr-2">
+                                  Dr. Smith
+                                </span>
+                                <span className="text-xs bg-gray-700 text-gray-300 px-2 py-0.5 rounded">
+                                  City General
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gray-800 rounded-lg p-4">
+                          <div className="flex justify-between items-center mb-3">
+                            <p className="text-sm text-gray-400">Upcoming Procedures</p>
+                            <button className="text-xs bg-blue-900/50 text-blue-400 px-2 py-1 rounded-full">
+                              Schedule
+                            </button>
+                          </div>
+                          
+                          <div className="space-y-3">
+                            <div className="p-3 bg-blue-900/30 border border-blue-800 rounded-lg">
+                              <div className="flex justify-between mb-1">
+                                <p className="font-medium">Cholecystectomy</p>
+                                <p className="text-xs text-blue-400">Scheduled</p>
+                              </div>
+                              <p className="text-xs text-gray-400">Laparoscopic, elective</p>
+                              <div className="flex items-center mt-1">
+                                <span className="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded mr-2">
+                                  June 15, 2023
+                                </span>
+                                <span className="text-xs bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded">
+                                  8:00 AM
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <Link href="/surgical-planning" className="flex items-center justify-between py-3 px-4 bg-gray-800 rounded-lg text-white hover:bg-gray-700">
                           <div className="flex items-center">
-                            <Utensils className="w-5 h-5 mr-2 text-green-500" />
-                            <span>View Recommended Meal Plans</span>
+                            <Syringe className="w-5 h-5 mr-2 text-blue-500" />
+                            <span>View Complete Surgical Records</span>
                           </div>
                           <ChevronRight className="w-5 h-5 text-gray-500" />
                         </Link>
@@ -706,43 +752,43 @@ export default function Home() {
           </section>
         )}
 
-        {/* Expandable Vaccine Section - Only show when child is selected */}
-        {selectedChild && !showAddChildForm && (
+        {/* Expandable Procedure Section - Only show when patient is selected */}
+        {selectedPatient && !showAddPatientForm && (
           <section className="mt-4">
             <div className="bg-gray-900 rounded-lg border border-gray-800">
               <button 
-                onClick={() => setShowVaccineSection(!showVaccineSection)}
+                onClick={() => setShowProcedureSection(!showProcedureSection)}
                 className="w-full flex justify-between items-center p-4"
               >
                 <div className="flex items-center">
-                  <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                  <div className="w-10 h-10 rounded-full bg-blue-700 flex items-center justify-center mr-3">
                     <Syringe className="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-semibold">Quick Complete Vaccines</h2>
-                    <p className="text-sm text-gray-400">Mark vaccines as completed by age group</p>
+                    <h2 className="text-lg font-semibold">Quick Procedure Scheduler</h2>
+                    <p className="text-sm text-gray-400">Schedule procedures and update surgical status</p>
                   </div>
                 </div>
-                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showVaccineSection ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${showProcedureSection ? 'rotate-180' : ''}`} />
               </button>
               
-              {showVaccineSection && (
+              {showProcedureSection && (
                 <div className="p-4 border-t border-gray-800">
                   <div className="p-4 bg-gray-800 rounded-lg">
                     <h3 className="text-md font-medium mb-2 flex items-center">
-                      <CheckCircle2 className="w-5 h-5 mr-2 text-green-500" />
-                      Quick Complete By Age
+                      <CheckCircle2 className="w-5 h-5 mr-2 text-blue-500" />
+                      Quick Schedule
                     </h3>
                     <p className="text-sm text-gray-400 mb-4">
-                      Save time by marking all vaccines as completed up to a certain age group.
-                      Perfect for catching up vaccination records when you've missed recording doses.
+                      Quickly schedule common procedures for this patient.
+                      Perfect for documenting upcoming surgical interventions.
                     </p>
                     <Link
-                      href={`/vaccines/quick-complete?childId=${selectedChild.id}`}
-                      className="w-full flex items-center justify-center gap-2 p-3 bg-green-600 text-white rounded-md hover:bg-green-500"
+                      href={`/procedures/schedule?patientId=${selectedPatient.id}`}
+                      className="w-full flex items-center justify-center gap-2 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-500"
                     >
                       <CheckCircle2 className="w-4 h-4" />
-                      <span>Quick Complete Vaccines By Age</span>
+                      <span>Schedule Procedure</span>
                     </Link>
                   </div>
                 </div>
@@ -751,22 +797,22 @@ export default function Home() {
           </section>
         )}
 
-        {/* No Child Selected State */}
-        {!selectedChild && !showAddChildForm && children.length === 0 && (
+        {/* No Patient Selected State */}
+        {!selectedPatient && !showAddPatientForm && patients.length === 0 && (
           <section className="text-center py-8">
             <User className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold mb-2">No Children Added Yet</h3>
-            <p className="text-gray-400 mb-4">Add your first child to get started</p>
+            <h3 className="text-xl font-semibold mb-2">No Patients Added Yet</h3>
+            <p className="text-gray-400 mb-4">Add your first patient to get started</p>
             <button
               onClick={() => {
                 setEditMode(false);
-                setChildToEdit(null);
-                setShowAddChildForm(true);
+                setPatientToEdit(null);
+                setShowAddPatientForm(true);
               }}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <Plus className="w-4 h-4 inline mr-2" />
-              Add New Child
+              Add New Patient
             </button>
           </section>
         )}
@@ -774,75 +820,65 @@ export default function Home() {
         {/* Clinical Tools Section */}
         <section>
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Clinical Tools</h2>
-            <Link href="/tools" className="text-sm text-green-400">View all</Link>
+            <h2 className="text-xl font-semibold">Surgical Tools</h2>
+            <Link href="/tools" className="text-sm text-blue-400">View all</Link>
           </div>
           
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <Link href="/tools/bp-centile" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
+            <Link href="/tools/surgical-risk" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-blue-500 transition-colors">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center mb-3">
                   <TrendingUp className="w-6 h-6 text-blue-400" />
                 </div>
-                <h3 className="font-medium text-sm">BP Centile</h3>
-                <p className="text-xs text-gray-400 mt-1">Calculate blood pressure percentiles</p>
+                <h3 className="font-medium text-sm">Risk Calculator</h3>
+                <p className="text-xs text-gray-400 mt-1">Calculate surgical risk</p>
               </div>
             </Link>
             
-            <Link href="/tools/normal-values" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
+            <Link href="/tools/lab-values" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-blue-500 transition-colors">
               <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center mb-3">
-                  <Clipboard className="w-6 h-6 text-green-400" />
+                <div className="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center mb-3">
+                  <Clipboard className="w-6 h-6 text-blue-400" />
                 </div>
-                <h3 className="font-medium text-sm">Normal Values</h3>
-                <p className="text-xs text-gray-400 mt-1">Reference ranges by age</p>
+                <h3 className="font-medium text-sm">Lab References</h3>
+                <p className="text-xs text-gray-400 mt-1">Normal ranges & flags</p>
               </div>
             </Link>
             
-            <Link href="/tools/growth-calculator" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
+            <Link href="/tools/anesthesia-calculator" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-blue-500 transition-colors">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-yellow-900/50 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-yellow-400">
-                    <path d="M12 2v20"></path>
-                    <path d="M2 12h20"></path>
-                    <path d="m4.93 4.93 14.14 14.14"></path>
-                    <path d="m19.07 4.93-14.14 14.14"></path>
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
                   </svg>
                 </div>
-                <h3 className="font-medium text-sm">Growth Velocity</h3>
-                <p className="text-xs text-gray-400 mt-1">Calculate growth rates</p>
+                <h3 className="font-medium text-sm">Anesthesia Calc</h3>
+                <p className="text-xs text-gray-400 mt-1">Calculate dosages</p>
               </div>
             </Link>
             
-            <Link href="/tools/fluid-calculator" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
+            <Link href="/tools/fluid-calculator" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-blue-500 transition-colors">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-cyan-900/50 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-cyan-400">
-                    <path d="M12 2v20"></path>
-                    <path d="M2 12h20"></path>
-                    <path d="M7 12a5 5 0 0 1 5-5"></path>
-                    <path d="M17 12a5 5 0 0 0-5-5"></path>
-                    <path d="M7 12a5 5 0 0 0 5 5"></path>
-                    <path d="M17 12a5 5 0 0 1-5 5"></path>
+                    <path d="M8 2h8"></path>
+                    <path d="M12 2v10.3a4 4 0 0 1-1.17 2.83l-1.9 1.91a4 4 0 0 0-1.17 2.83V22"></path>
+                    <path d="M10 10.5v1"></path>
                   </svg>
                 </div>
                 <h3 className="font-medium text-sm">Fluid Calculator</h3>
-                <p className="text-xs text-gray-400 mt-1">Calculate fluid requirements</p>
+                <p className="text-xs text-gray-400 mt-1">Perioperative fluids</p>
               </div>
             </Link>
           </div>
           
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mt-4">
-            <Link href="/tools/bmi-calculator" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
+            <Link href="/tools/bmi-calculator" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-blue-500 transition-colors">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-purple-900/50 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-purple-400">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                    <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
-                    <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
-                    <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="m4.93 4.93 14.14 14.14"></path>
                   </svg>
                 </div>
                 <h3 className="font-medium text-sm">BMI Calculator</h3>
@@ -850,54 +886,51 @@ export default function Home() {
               </div>
             </Link>
             
-            <Link href="/tools/gir-calculator" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
+            <Link href="/tools/antibiotic-guide" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-blue-500 transition-colors">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-red-900/50 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-red-400">
-                    <path d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5Z" />
-                    <path d="M9 10h6" />
-                    <path d="M12 7v6" />
-                    <path d="M9 17h6" />
+                    <path d="M15 11h.01"></path>
+                    <path d="M11 15h.01"></path>
+                    <path d="M16 16h.01"></path>
+                    <path d="M10 13h.01"></path>
+                    <path d="M18 10.01l-1-1l1-1"></path>
+                    <path d="m6 16.01 1-1-1-1"></path>
+                    <path d="m7 5.01 1 1-1 1"></path>
+                    <path d="m17 19.01-1-1 1-1"></path>
+                    <path d="M3 8h1"></path>
+                    <path d="M20 8h1"></path>
+                    <path d="M8 3v1"></path>
+                    <path d="M8 20v1"></path>
+                    <path d="M16 3v1"></path>
+                    <path d="M16 20v1"></path>
+                    <path d="M3 16h1"></path>
+                    <path d="M20 16h1"></path>
                   </svg>
                 </div>
-                <h3 className="font-medium text-sm">GIR Calculator</h3>
-                <p className="text-xs text-gray-400 mt-1">Calculate glucose infusion rates</p>
+                <h3 className="font-medium text-sm">Antibiotic Guide</h3>
+                <p className="text-xs text-gray-400 mt-1">Prophylaxis protocols</p>
               </div>
             </Link>
             
-            <Link href="/tools/nutrition-calculator" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
+            <Link href="/tools/suture-guide" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-blue-500 transition-colors">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-orange-900/50 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-orange-400">
-                    <path d="M12 2a8 8 0 0 0-8 8c0 6 8 12 8 12s8-6 8-12a8 8 0 0 0-8-8"></path>
-                    <path d="M12 12a3 3 0 1 0 0-6 3 3 0 0 0 0 6"></path>
+                    <path d="M2 12s5-7 10-7 10 7 10 7-5 7-10 7-10-7-10-7Z"></path>
+                    <path d="M5 12v.01"></path>
+                    <path d="M19 12v.01"></path>
+                    <path d="M12 12v.01"></path>
+                    <path d="M12 7v.01"></path>
+                    <path d="M12 17v.01"></path>
                   </svg>
                 </div>
-                <h3 className="font-medium text-sm">Nutrition Calc</h3>
-                <p className="text-xs text-gray-400 mt-1">Calculate nutritional needs</p>
+                <h3 className="font-medium text-sm">Suture Guide</h3>
+                <p className="text-xs text-gray-400 mt-1">Selection & techniques</p>
               </div>
             </Link>
             
-            <Link href="/tools/pedigree" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-full bg-indigo-900/50 flex items-center justify-center mb-3">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-indigo-400">
-                    <rect width="18" height="18" x="3" y="3" rx="2" />
-                    <path d="M12 3v18" />
-                    <path d="M7 7h5" />
-                    <path d="M7 12h5" />
-                    <path d="M7 17h5" />
-                    <path d="M17 7h.01" />
-                    <path d="M17 12h.01" />
-                    <path d="M17 17h.01" />
-                  </svg>
-                </div>
-                <h3 className="font-medium text-sm">Pedigree Chart</h3>
-                <p className="text-xs text-gray-400 mt-1">Create family pedigrees</p>
-              </div>
-            </Link>
-            
-            <Link href="/tools/all" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-500 transition-colors">
+            <Link href="/tools/all" className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-blue-500 transition-colors">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center mb-3">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6 text-gray-400">
@@ -907,12 +940,12 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="font-medium text-sm">More Tools</h3>
-                <p className="text-xs text-gray-400 mt-1">View all clinical tools</p>
+                <p className="text-xs text-gray-400 mt-1">View all surgical tools</p>
               </div>
             </Link>
           </div>
         </section>
-        </div>
+      </div>
 
       <BottomNav />
     </div>

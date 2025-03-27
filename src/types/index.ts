@@ -170,4 +170,60 @@ export interface ClinicalCategory {
   description: string;
   parameters: string[]; // IDs of clinical parameters in this category
   icon: string;
-} 
+}
+
+// New Types for Surgery App
+export type Patient = {
+  id: string;
+  name: string;
+  dateOfBirth: string; // ISO format
+  gender: 'Male' | 'Female' | 'Other';
+  weight?: number; // in kg
+  height?: number; // in cm
+  bloodPressure?: string; // format: "120/80"
+  bloodGroup?: string;
+  procedureHistory: Array<{
+    id: string;
+    procedureId: string;
+    status: 'Scheduled' | 'Completed' | 'Cancelled';
+    dateScheduled?: string;
+    datePerformed?: string;
+    surgeon?: string;
+    location?: string;
+    notes?: string;
+  }>;
+};
+
+export type Procedure = {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  estimatedDuration: number; // in minutes
+  requiresGeneralAnesthesia: boolean;
+  commonComplications: string[];
+  recoveryTime: string;
+  preOpInstructions: string[];
+  postOpInstructions: string[];
+};
+
+export type SurgicalSchedule = {
+  id: string;
+  name: string;
+  procedures: Array<{
+    procedureId: string;
+    name: string;
+    ageInMonths: number;
+    recommended: boolean;
+  }>;
+};
+
+export type SurgicalGuideline = {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+  source: string;
+  lastUpdated: string;
+}; 

@@ -1,4 +1,4 @@
-import { Recipe, MealPlan, NutritionTip, Achievement, UserProfile, Vaccine, Child, VaccineSchedule, DrugInformation, ClinicalParameter, ClinicalCategory } from '@/types';
+import { Recipe, MealPlan, NutritionTip, Achievement, UserProfile, Vaccine, Child, VaccineSchedule, DrugInformation, ClinicalParameter, ClinicalCategory, Patient, Procedure, SurgicalSchedule, SurgicalGuideline } from '@/types';
 
 export const mockRecipes: Recipe[] = [
   {
@@ -800,4 +800,235 @@ export const mockClinicalCategories: ClinicalCategory[] = [
 // Add drugs to their respective categories
 mockClinicalCategories.find(cat => cat.id === 'cc4')!.parameters.push('d1');
 mockClinicalCategories.find(cat => cat.id === 'cc5')!.parameters.push('d2');
-mockClinicalCategories.find(cat => cat.id === 'cc6')!.parameters.push('d3'); 
+mockClinicalCategories.find(cat => cat.id === 'cc6')!.parameters.push('d3');
+
+// Mock Surgical Data
+export const mockPatients: Patient[] = [
+  {
+    id: 'p1',
+    name: 'John Smith',
+    dateOfBirth: '1985-07-15',
+    gender: 'Male',
+    weight: 78.5,
+    height: 182,
+    bloodPressure: '120/80',
+    bloodGroup: 'A+',
+    procedureHistory: [
+      {
+        id: 'proc1',
+        procedureId: 'proc001',
+        status: 'Completed',
+        datePerformed: '2022-04-12',
+        surgeon: 'Dr. Wilson',
+        location: 'General Hospital',
+        notes: 'Uncomplicated appendectomy'
+      },
+      {
+        id: 'proc2',
+        procedureId: 'proc005',
+        status: 'Scheduled',
+        dateScheduled: '2023-06-15',
+        surgeon: 'Dr. Johnson',
+        location: 'Memorial Hospital',
+        notes: 'Elective procedure, patient cleared by cardiology'
+      }
+    ]
+  },
+  {
+    id: 'p2',
+    name: 'Emily Johnson',
+    dateOfBirth: '1990-03-22',
+    gender: 'Female',
+    weight: 65.2,
+    height: 168,
+    bloodPressure: '110/70',
+    bloodGroup: 'O+',
+    procedureHistory: [
+      {
+        id: 'proc3',
+        procedureId: 'proc002',
+        status: 'Completed',
+        datePerformed: '2021-08-30',
+        surgeon: 'Dr. Martinez',
+        location: 'University Medical Center',
+        notes: 'Laparoscopic cholecystectomy with minimal blood loss'
+      }
+    ]
+  },
+  {
+    id: 'p3',
+    name: 'Michael Davis',
+    dateOfBirth: '1975-11-08',
+    gender: 'Male',
+    weight: 92.1,
+    height: 188,
+    bloodPressure: '135/85',
+    bloodGroup: 'B-',
+    procedureHistory: []
+  }
+];
+
+export const mockProcedures: Procedure[] = [
+  {
+    id: 'proc001',
+    name: 'Appendectomy',
+    category: 'Abdominal',
+    description: 'Surgical removal of the appendix',
+    estimatedDuration: 60,
+    requiresGeneralAnesthesia: true,
+    commonComplications: ['Infection', 'Bleeding', 'Adhesions'],
+    recoveryTime: '2-4 weeks',
+    preOpInstructions: [
+      'Nothing to eat or drink 8 hours before surgery',
+      'Shower with antibacterial soap the night before'
+    ],
+    postOpInstructions: [
+      'Limit physical activity for 2 weeks',
+      'Keep incision clean and dry',
+      'Follow up in 10-14 days for suture removal'
+    ]
+  },
+  {
+    id: 'proc002',
+    name: 'Cholecystectomy',
+    category: 'Abdominal',
+    description: 'Surgical removal of the gallbladder',
+    estimatedDuration: 90,
+    requiresGeneralAnesthesia: true,
+    commonComplications: ['Bile leak', 'Injury to bile duct', 'Infection'],
+    recoveryTime: '1-2 weeks',
+    preOpInstructions: [
+      'Nothing to eat or drink 8 hours before surgery',
+      'Stop certain medications as directed'
+    ],
+    postOpInstructions: [
+      'Low-fat diet initially',
+      'Gradually increase activity',
+      'Follow up in 2 weeks'
+    ]
+  },
+  {
+    id: 'proc003',
+    name: 'Hernia Repair',
+    category: 'Abdominal',
+    description: 'Repair of a hernia using mesh or suture',
+    estimatedDuration: 75,
+    requiresGeneralAnesthesia: true,
+    commonComplications: ['Recurrence', 'Chronic pain', 'Infection'],
+    recoveryTime: '3-6 weeks',
+    preOpInstructions: [
+      'Nothing to eat or drink 8 hours before surgery',
+      'Arrange for someone to drive you home'
+    ],
+    postOpInstructions: [
+      'No heavy lifting for 6 weeks',
+      'Use pillow when coughing',
+      'Follow up in 2 weeks'
+    ]
+  },
+  {
+    id: 'proc004',
+    name: 'Thyroidectomy',
+    category: 'Endocrine',
+    description: 'Removal of all or part of the thyroid gland',
+    estimatedDuration: 120,
+    requiresGeneralAnesthesia: true,
+    commonComplications: ['Hypocalcemia', 'Recurrent laryngeal nerve injury', 'Bleeding'],
+    recoveryTime: '1-2 weeks',
+    preOpInstructions: [
+      'Nothing to eat or drink 8 hours before surgery',
+      'Stop blood thinners as directed'
+    ],
+    postOpInstructions: [
+      'Voice rest as directed',
+      'Monitor for signs of hypocalcemia',
+      'Follow up in 1 week'
+    ]
+  },
+  {
+    id: 'proc005',
+    name: 'Laparoscopic Gastric Bypass',
+    category: 'Bariatric',
+    description: 'Creation of a small gastric pouch and bypass of the proximal small intestine',
+    estimatedDuration: 180,
+    requiresGeneralAnesthesia: true,
+    commonComplications: ['Leak', 'Stricture', 'Nutritional deficiencies'],
+    recoveryTime: '2-4 weeks',
+    preOpInstructions: [
+      'Follow pre-op diet strictly',
+      'Stop smoking at least 6 weeks before surgery'
+    ],
+    postOpInstructions: [
+      'Follow staged diet progression',
+      'Take vitamins as prescribed',
+      'Follow up at 1 week, 1 month, and 3 months'
+    ]
+  }
+];
+
+export const mockSurgicalSchedule: SurgicalSchedule = {
+  id: 'sch1',
+  name: 'Standard Surgical Schedule',
+  procedures: [
+    {
+      procedureId: 'proc001',
+      name: 'Appendectomy',
+      ageInMonths: 0,
+      recommended: true
+    },
+    {
+      procedureId: 'proc002',
+      name: 'Cholecystectomy',
+      ageInMonths: 0,
+      recommended: true
+    },
+    {
+      procedureId: 'proc003',
+      name: 'Hernia Repair',
+      ageInMonths: 0,
+      recommended: true
+    },
+    {
+      procedureId: 'proc004',
+      name: 'Thyroidectomy',
+      ageInMonths: 0,
+      recommended: false
+    },
+    {
+      procedureId: 'proc005',
+      name: 'Laparoscopic Gastric Bypass',
+      ageInMonths: 0,
+      recommended: false
+    }
+  ]
+};
+
+export const mockSurgicalGuidelines: SurgicalGuideline[] = [
+  {
+    id: 'guide1',
+    title: 'Pre-operative Antibiotic Prophylaxis',
+    content: 'Administer antibiotics within 60 minutes before surgical incision. For most procedures, cefazolin is the first-line agent.',
+    category: 'Infection Prevention',
+    tags: ['antibiotics', 'prevention', 'pre-op'],
+    source: 'American College of Surgeons',
+    lastUpdated: '2023-01-15'
+  },
+  {
+    id: 'guide2',
+    title: 'Enhanced Recovery After Surgery (ERAS)',
+    content: 'Implement multimodal perioperative care pathways designed to achieve early recovery for patients undergoing major surgery.',
+    category: 'Post-operative Care',
+    tags: ['recovery', 'protocols', 'post-op'],
+    source: 'ERAS Society',
+    lastUpdated: '2022-11-03'
+  },
+  {
+    id: 'guide3',
+    title: 'Venous Thromboembolism Prophylaxis',
+    content: 'Risk assessment should be performed for all surgical patients. Mechanical and/or pharmacological prophylaxis should be used based on risk level.',
+    category: 'Complication Prevention',
+    tags: ['VTE', 'prevention', 'anticoagulation'],
+    source: 'American Society of Hematology',
+    lastUpdated: '2023-02-20'
+  }
+]; 
