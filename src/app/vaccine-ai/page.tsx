@@ -228,7 +228,7 @@ export default function VaccineAI() {
             </div>
             <div>
               <h1 className="text-lg font-bold">Vaccine AI</h1>
-              <p className="text-xs text-gray-400">Powered by DeepSeek</p>
+              <p className="text-xs text-gray-400">Powered by AI Engine</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">

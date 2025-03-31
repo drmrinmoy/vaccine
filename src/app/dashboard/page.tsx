@@ -12,7 +12,8 @@ import {
   CheckCircle, 
   Clock, 
   AlertCircle,
-  Calendar
+  Calendar,
+  ExternalLink
 } from 'lucide-react';
 import Link from 'next/link';
 import { format, addMonths, addYears, isAfter, isBefore, parseISO } from 'date-fns';
@@ -123,7 +124,7 @@ export default function Dashboard() {
   const [childToEdit, setChildToEdit] = useState<Child | null>(null);
   const [activeAgeGroups, setActiveAgeGroups] = useState<string[]>(['birth', '6 weeks', '10 weeks', '14 weeks']); // Default open groups
   const [activeVaccineFilter, setActiveVaccineFilter] = useState('all');
-  const [activeSchedule, setActiveSchedule] = useState<'nis' | 'iap'>('nis'); // New state for active schedule
+  const [activeSchedule, setActiveSchedule] = useState<'nis' | 'iap'>('nis'); // State for active schedule
   
   // Form state
   const [name, setName] = useState('');
@@ -578,20 +579,31 @@ export default function Dashboard() {
                     <div className="bg-gray-900 rounded-lg border border-gray-800 p-6">
                       <h3 className="text-lg font-semibold mb-4">Vaccination Tracker</h3>
                       
-                      {/* Schedule Type Tabs */}
-                      <div className="flex mb-4 border-b border-gray-800">
-                        <button 
-                          className={`px-4 py-2 ${activeSchedule === 'nis' ? 'text-green-500 border-b-2 border-green-500' : 'text-gray-400'}`}
-                          onClick={() => setActiveSchedule('nis')}
-                        >
-                          NIS Schedule
-                        </button>
-                        <button 
-                          className={`px-4 py-2 ${activeSchedule === 'iap' ? 'text-green-500 border-b-2 border-green-500' : 'text-gray-400'}`}
-                          onClick={() => setActiveSchedule('iap')}
-                        >
-                          IAP Schedule
-                        </button>
+                      {/* Schedule Type Toggle - Replace tabs with toggle */}
+                      <div className="flex items-center mb-4 p-3 bg-gray-800 rounded-lg">
+                        <span className="text-gray-300 mr-3">Schedule Type:</span>
+                        <div className="flex bg-gray-900 p-1 rounded-full">
+                          <button 
+                            className={`px-4 py-2 rounded-full transition-colors ${
+                              activeSchedule === 'nis' 
+                                ? 'bg-green-600 text-white' 
+                                : 'bg-transparent text-gray-400 hover:text-white'
+                            }`}
+                            onClick={() => setActiveSchedule('nis')}
+                          >
+                            NIS
+                          </button>
+                          <button 
+                            className={`px-4 py-2 rounded-full transition-colors ${
+                              activeSchedule === 'iap' 
+                                ? 'bg-green-600 text-white' 
+                                : 'bg-transparent text-gray-400 hover:text-white'
+                            }`}
+                            onClick={() => setActiveSchedule('iap')}
+                          >
+                            IAP
+                          </button>
+                        </div>
                       </div>
                       
                       {/* Filter tabs */}
@@ -818,6 +830,39 @@ export default function Dashboard() {
                             });
                           }
                         })()}
+                      </div>
+                      
+                      {/* Additional Vaccination Resources - Add new section */}
+                      <div className="mt-8 space-y-4">
+                        <h3 className="text-lg font-semibold">Additional Vaccination Resources</h3>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                          {/* Catchup Vaccination */}
+                          <Link href="/catchup-vaccination" className="block p-4 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 transition-colors">
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <h4 className="font-medium text-white mb-1">Catchup Vaccination</h4>
+                                <p className="text-sm text-gray-400">
+                                  Guidelines for missed or delayed vaccinations to ensure proper immunization coverage.
+                                </p>
+                              </div>
+                              <ExternalLink className="h-5 w-5 text-gray-400" />
+                            </div>
+                          </Link>
+                          
+                          {/* Vaccination in Special Situations */}
+                          <Link href="/special-vaccination" className="block p-4 bg-gray-800 hover:bg-gray-700 rounded-lg border border-gray-700 transition-colors">
+                            <div className="flex items-start justify-between">
+                              <div>
+                                <h4 className="font-medium text-white mb-1">Special Situations</h4>
+                                <p className="text-sm text-gray-400">
+                                  Specific vaccination protocols for immunocompromised children, travel, or other special circumstances.
+                                </p>
+                              </div>
+                              <ExternalLink className="h-5 w-5 text-gray-400" />
+                            </div>
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
