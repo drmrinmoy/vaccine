@@ -109,18 +109,17 @@ export const mockAchievements: Achievement[] = [
   }
 ];
 
-export const mockUserProfile: UserProfile = {
-  id: '1',
-  name: 'Doctor',
-  age: 8,
-  region: 'Maharashtra',
-  dietaryPreferences: ['Vegetarian'],
-  allergies: ['Peanuts'],
-  favoriteRecipes: ['1', '2'],
-  achievements: mockAchievements,
-  streakDays: 7,
-  lastActive: new Date().toISOString(),
-  role: 'parent'
+export const mockUserProfile = {
+  id: 'user1',
+  name: 'Parent Account',
+  email: 'parent@example.com',
+  role: 'parent',
+  created: '2023-01-15',
+  settings: {
+    darkMode: true,
+    notifications: true,
+    language: 'en',
+  }
 };
 
 export const mockDoctorProfile: UserProfile = {
@@ -295,6 +294,56 @@ export const mockVaccines: Vaccine[] = [
     catchupAges: ['Up to 18 years'],
     sideEffects: ['Pain at injection site', 'Fever', 'Headache'],
     image: '/images/vaccines/typhoid.jpg'
+  },
+  {
+    id: 'v13',
+    name: 'Influenza',
+    description: 'Protects against seasonal influenza (flu)',
+    diseases: ['Influenza'],
+    recommendedAges: ['6 weeks', '6 months', '12 months', 'Yearly'],
+    doseCount: 2,
+    sideEffects: ['Soreness at injection site', 'Low-grade fever', 'Muscle aches'],
+    image: '/images/vaccines/influenza.jpg'
+  },
+  {
+    id: 'v14',
+    name: 'Hepatitis A',
+    description: 'Protects against Hepatitis A virus infection',
+    diseases: ['Hepatitis A'],
+    recommendedAges: ['12 months', '18 months'],
+    doseCount: 2,
+    sideEffects: ['Pain at injection site', 'Mild fever', 'Headache'],
+    image: '/images/vaccines/hepa.jpg'
+  },
+  {
+    id: 'v15',
+    name: 'Varicella',
+    description: 'Protects against chickenpox',
+    diseases: ['Varicella (Chickenpox)'],
+    recommendedAges: ['15 months', '4-6 years'],
+    doseCount: 2,
+    sideEffects: ['Soreness at injection site', 'Mild rash', 'Fever'],
+    image: '/images/vaccines/varicella.jpg'
+  },
+  {
+    id: 'v16',
+    name: 'HPV',
+    description: 'Protects against human papillomavirus, which can cause cervical cancer and other cancers',
+    diseases: ['HPV', 'Cervical Cancer'],
+    recommendedAges: ['9-14 years'],
+    doseCount: 2,
+    sideEffects: ['Pain at injection site', 'Swelling', 'Headache'],
+    image: '/images/vaccines/hpv.jpg'
+  },
+  {
+    id: 'v17',
+    name: 'Tdap',
+    description: 'Booster for tetanus, diphtheria, and acellular pertussis',
+    diseases: ['Tetanus', 'Diphtheria', 'Pertussis'],
+    recommendedAges: ['10-12 years', '16 years'],
+    doseCount: 2,
+    sideEffects: ['Pain at injection site', 'Headache', 'Fatigue'],
+    image: '/images/vaccines/tdap.jpg'
   }
 ];
 
@@ -339,6 +388,75 @@ export const mockVaccineSchedule: VaccineSchedule = {
     {
       ageRange: '10-16 years',
       vaccines: ['v12'] // Typhoid
+    }
+  ]
+};
+
+// Mock IAP vaccine schedule (Indian Academy of Pediatrics)
+export const mockIAPVaccineSchedule: VaccineSchedule = {
+  id: 'vs2',
+  name: 'IAP Immunization Schedule',
+  description: 'Immunization schedule recommended by the Indian Academy of Pediatrics (IAP)',
+  recommendedVaccines: [
+    {
+      ageRange: 'At birth',
+      vaccines: ['v1', 'v2', 'v3'] // BCG, OPV, Hepatitis B
+    },
+    {
+      ageRange: '6 weeks',
+      vaccines: ['v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8', 'v13'] // OPV, Hep B, DPT, Hib, Rotavirus, PCV, IPV, Influenza
+    },
+    {
+      ageRange: '10 weeks',
+      vaccines: ['v2', 'v3', 'v4', 'v5', 'v6', 'v7'] // OPV, Hep B, DPT, Hib, Rotavirus, PCV
+    },
+    {
+      ageRange: '14 weeks',
+      vaccines: ['v2', 'v3', 'v4', 'v5', 'v6', 'v7', 'v8'] // OPV, Hep B, DPT, Hib, Rotavirus, PCV, IPV
+    },
+    {
+      ageRange: '6 months',
+      vaccines: ['v13'] // Influenza
+    },
+    {
+      ageRange: '9 months',
+      vaccines: ['v9', 'v11'] // Measles, JE 1st dose
+    },
+    {
+      ageRange: '12 months',
+      vaccines: ['v7', 'v10', 'v13', 'v14'] // PCV booster, MMR, Influenza, Hepatitis A
+    },
+    {
+      ageRange: '15 months',
+      vaccines: ['v15'] // Varicella
+    },
+    {
+      ageRange: '16-18 months',
+      vaccines: ['v4', 'v2', 'v8'] // DPT booster, OPV booster, IPV booster
+    },
+    {
+      ageRange: '18 months',
+      vaccines: ['v14'] // Hepatitis A 2nd dose
+    },
+    {
+      ageRange: '2 years',
+      vaccines: ['v12'] // Typhoid
+    },
+    {
+      ageRange: '4-6 years',
+      vaccines: ['v4', 'v10', 'v15'] // DPT booster, MMR booster, Varicella booster
+    },
+    {
+      ageRange: '9-14 years',
+      vaccines: ['v16'] // HPV (2 doses)
+    },
+    {
+      ageRange: '10-12 years',
+      vaccines: ['v12', 'v17'] // Typhoid booster, Tdap
+    },
+    {
+      ageRange: '16 years',
+      vaccines: ['v17'] // Tdap booster
     }
   ]
 };
@@ -1030,5 +1148,89 @@ export const mockSurgicalGuidelines: SurgicalGuideline[] = [
     tags: ['VTE', 'prevention', 'anticoagulation'],
     source: 'American Society of Hematology',
     lastUpdated: '2023-02-20'
+  }
+];
+
+// National Immunization Schedule Data
+export const vaccineSchedule = [
+  { id: 'bcg', name: 'BCG', scheduledAt: 'birth', description: 'Protects against tuberculosis' },
+  { id: 'hepb0', name: 'Hepatitis B - Birth dose', scheduledAt: 'birth', description: 'First dose for preventing Hepatitis B' },
+  { id: 'opv0', name: 'OPV - Birth dose', scheduledAt: 'birth', description: 'Zero dose for polio protection' },
+  { id: 'opv1', name: 'OPV 1', scheduledAt: '6 weeks', description: 'First primary dose for polio' },
+  { id: 'penta1', name: 'Pentavalent 1', scheduledAt: '6 weeks', description: 'Protects against diphtheria, pertussis, tetanus, Hib, and hepatitis B' },
+  { id: 'rota1', name: 'Rotavirus 1', scheduledAt: '6 weeks', description: 'Protects against rotavirus diarrhea' },
+  { id: 'pcv1', name: 'PCV 1', scheduledAt: '6 weeks', description: 'Protects against pneumococcal diseases' },
+  { id: 'opv2', name: 'OPV 2', scheduledAt: '10 weeks', description: 'Second primary dose for polio' },
+  { id: 'penta2', name: 'Pentavalent 2', scheduledAt: '10 weeks', description: 'Second dose of the 5-in-1 vaccine' },
+  { id: 'rota2', name: 'Rotavirus 2', scheduledAt: '10 weeks', description: 'Second dose against rotavirus' },
+  { id: 'pcv2', name: 'PCV 2', scheduledAt: '10 weeks', description: 'Second dose against pneumococcal diseases' },
+  { id: 'opv3', name: 'OPV 3', scheduledAt: '14 weeks', description: 'Third primary dose for polio' },
+  { id: 'penta3', name: 'Pentavalent 3', scheduledAt: '14 weeks', description: 'Final primary dose of the 5-in-1 vaccine' },
+  { id: 'rota3', name: 'Rotavirus 3', scheduledAt: '14 weeks', description: 'Final dose against rotavirus' },
+  { id: 'pcv3', name: 'PCV 3', scheduledAt: '14 weeks', description: 'Final primary dose against pneumococcal diseases' },
+  { id: 'ipv', name: 'IPV', scheduledAt: '14 weeks', description: 'Inactivated polio vaccine dose' },
+  { id: 'mr1', name: 'MR 1', scheduledAt: '9 months', description: 'First dose against measles and rubella' },
+  { id: 'je1', name: 'JE 1', scheduledAt: '9 months', description: 'First dose against Japanese encephalitis' },
+  { id: 'vitA1', name: 'Vitamin A', scheduledAt: '9 months', description: 'First dose of Vitamin A supplementation' },
+  { id: 'dpt1', name: 'DPT Booster 1', scheduledAt: '16-24 months', description: 'Booster for diphtheria, pertussis, and tetanus' },
+  { id: 'mr2', name: 'MR 2', scheduledAt: '16-24 months', description: 'Second dose against measles and rubella' },
+  { id: 'opvb', name: 'OPV Booster', scheduledAt: '16-24 months', description: 'Booster dose for polio' },
+  { id: 'je2', name: 'JE 2', scheduledAt: '16-24 months', description: 'Second dose against Japanese encephalitis' },
+  { id: 'tcv', name: 'Typhoid Conjugate Vaccine', scheduledAt: '9-12 years', description: 'Protects against typhoid fever' },
+  { id: 'td', name: 'Td', scheduledAt: '10 years & 16 years', description: 'Tetanus and diphtheria booster doses' },
+];
+
+// Sample Children Data (this would typically come from the user's actual data)
+export const sampleChildren = [
+  {
+    id: 'child1',
+    name: 'Ajay Kumar',
+    dateOfBirth: '2023-01-15',
+    gender: 'Male' as const,
+    vaccinations: [
+      { id: 'v1', name: 'BCG', dueDate: '2023-01-15', status: 'Completed' as const, completedDate: '2023-01-15' },
+      { id: 'v2', name: 'Hepatitis B - Birth dose', dueDate: '2023-01-15', status: 'Completed' as const, completedDate: '2023-01-15' },
+      { id: 'v3', name: 'OPV - Birth dose', dueDate: '2023-01-15', status: 'Completed' as const, completedDate: '2023-01-15' },
+      { id: 'v4', name: 'OPV 1', dueDate: '2023-02-26', status: 'Completed' as const, completedDate: '2023-02-28' },
+      { id: 'v5', name: 'Pentavalent 1', dueDate: '2023-02-26', status: 'Completed' as const, completedDate: '2023-02-28' },
+      { id: 'v6', name: 'Rotavirus 1', dueDate: '2023-02-26', status: 'Completed' as const, completedDate: '2023-02-28' },
+      { id: 'v7', name: 'PCV 1', dueDate: '2023-02-26', status: 'Completed' as const, completedDate: '2023-02-28' },
+      { id: 'v8', name: 'OPV 2', dueDate: '2023-03-26', status: 'Completed' as const, completedDate: '2023-03-30' },
+      { id: 'v9', name: 'Pentavalent 2', dueDate: '2023-03-26', status: 'Completed' as const, completedDate: '2023-03-30' },
+      { id: 'v10', name: 'Rotavirus 2', dueDate: '2023-03-26', status: 'Due' as const },
+      { id: 'v11', name: 'PCV 2', dueDate: '2023-03-26', status: 'Due' as const },
+      { id: 'v12', name: 'OPV 3', dueDate: '2023-04-26', status: 'Upcoming' as const },
+      { id: 'v13', name: 'Pentavalent 3', dueDate: '2023-04-26', status: 'Upcoming' as const },
+      { id: 'v14', name: 'Rotavirus 3', dueDate: '2023-04-26', status: 'Upcoming' as const },
+      { id: 'v15', name: 'PCV 3', dueDate: '2023-04-26', status: 'Upcoming' as const },
+      { id: 'v16', name: 'IPV', dueDate: '2023-04-26', status: 'Upcoming' as const },
+    ]
+  },
+  {
+    id: 'child2',
+    name: 'Priya Singh',
+    dateOfBirth: '2022-05-10',
+    gender: 'Female' as const,
+    vaccinations: [
+      { id: 'v1', name: 'BCG', dueDate: '2022-05-10', status: 'Completed' as const, completedDate: '2022-05-10' },
+      { id: 'v2', name: 'Hepatitis B - Birth dose', dueDate: '2022-05-10', status: 'Completed' as const, completedDate: '2022-05-10' },
+      { id: 'v3', name: 'OPV - Birth dose', dueDate: '2022-05-10', status: 'Completed' as const, completedDate: '2022-05-10' },
+      { id: 'v4', name: 'OPV 1', dueDate: '2022-06-21', status: 'Completed' as const, completedDate: '2022-06-22' },
+      { id: 'v5', name: 'Pentavalent 1', dueDate: '2022-06-21', status: 'Completed' as const, completedDate: '2022-06-22' },
+      { id: 'v6', name: 'Rotavirus 1', dueDate: '2022-06-21', status: 'Completed' as const, completedDate: '2022-06-22' },
+      { id: 'v7', name: 'PCV 1', dueDate: '2022-06-21', status: 'Completed' as const, completedDate: '2022-06-22' },
+      { id: 'v8', name: 'OPV 2', dueDate: '2022-07-21', status: 'Completed' as const, completedDate: '2022-07-25' },
+      { id: 'v9', name: 'Pentavalent 2', dueDate: '2022-07-21', status: 'Completed' as const, completedDate: '2022-07-25' },
+      { id: 'v10', name: 'Rotavirus 2', dueDate: '2022-07-21', status: 'Completed' as const, completedDate: '2022-07-25' },
+      { id: 'v11', name: 'PCV 2', dueDate: '2022-07-21', status: 'Completed' as const, completedDate: '2022-07-25' },
+      { id: 'v12', name: 'OPV 3', dueDate: '2022-08-21', status: 'Completed' as const, completedDate: '2022-08-23' },
+      { id: 'v13', name: 'Pentavalent 3', dueDate: '2022-08-21', status: 'Completed' as const, completedDate: '2022-08-23' },
+      { id: 'v14', name: 'Rotavirus 3', dueDate: '2022-08-21', status: 'Completed' as const, completedDate: '2022-08-23' },
+      { id: 'v15', name: 'PCV 3', dueDate: '2022-08-21', status: 'Completed' as const, completedDate: '2022-08-23' },
+      { id: 'v16', name: 'IPV', dueDate: '2022-08-21', status: 'Completed' as const, completedDate: '2022-08-23' },
+      { id: 'v17', name: 'MR 1', dueDate: '2023-02-10', status: 'Overdue' as const },
+      { id: 'v18', name: 'JE 1', dueDate: '2023-02-10', status: 'Overdue' as const },
+      { id: 'v19', name: 'Vitamin A', dueDate: '2023-02-10', status: 'Overdue' as const },
+    ]
   }
 ]; 

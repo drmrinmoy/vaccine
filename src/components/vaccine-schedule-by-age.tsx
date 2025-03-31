@@ -26,7 +26,7 @@ export function VaccineScheduleByAge({ vaccines, vaccineSchedule }: VaccineSched
   
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold mb-2">National Immunization Schedule (NIS)</h3>
+      <h3 className="text-lg font-semibold mb-2">{vaccineSchedule.name}</h3>
       
       {/* Age group accordions */}
       <div className="space-y-3">
@@ -135,7 +135,7 @@ export function VaccineScheduleByAge({ vaccines, vaccineSchedule }: VaccineSched
         <div className="flex items-start gap-2">
           <Info className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
           <div className="text-sm text-gray-300">
-            <p>This schedule follows the National Immunization Schedule (NIS) of India. Always consult with your healthcare provider for personalized vaccination advice.</p>
+            <p>This schedule follows the {vaccineSchedule.name} of India. Always consult with your healthcare provider for personalized vaccination advice.</p>
             <p className="mt-2 text-xs text-gray-400">
               Note: Some vaccines may be combined into single shots (e.g., DPT). Catch-up vaccinations are available for children who miss their scheduled doses.
             </p>
