@@ -11,8 +11,13 @@ import { ChevronLeft, Plus, User } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
+<<<<<<< HEAD
 // Client component that uses useSearchParams hook
 function VaccineRecordContent() {
+=======
+// Separate component that uses useSearchParams
+function VaccineRecord() {
+>>>>>>> 214af40 (buuild successful)
   const [children, setChildren] = useState(mockChildren);
   const [selectedChild, setSelectedChild] = useState<Child | null>(null);
   const [activeTab, setActiveTab] = useState<'all-records' | 'age-groups' | 'quick-entry'>('quick-entry');
@@ -232,6 +237,7 @@ function VaccineRecordContent() {
   );
 }
 
+<<<<<<< HEAD
 // Loading fallback component
 function LoadingFallback() {
   return (
@@ -239,6 +245,15 @@ function LoadingFallback() {
       <div className="text-center">
         <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
         <p className="text-gray-400">Loading vaccine records...</p>
+=======
+// Loading fallback
+function VaccineRecordLoading() {
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mx-auto"></div>
+        <p className="mt-4 text-gray-400">Loading vaccination records...</p>
+>>>>>>> 214af40 (buuild successful)
       </div>
     </div>
   );
@@ -246,8 +261,13 @@ function LoadingFallback() {
 
 export default function VaccineRecordPage() {
   return (
+<<<<<<< HEAD
     <Suspense fallback={<LoadingFallback />}>
       <VaccineRecordContent />
+=======
+    <Suspense fallback={<VaccineRecordLoading />}>
+      <VaccineRecord />
+>>>>>>> 214af40 (buuild successful)
     </Suspense>
   );
 } 

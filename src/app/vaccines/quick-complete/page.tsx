@@ -8,8 +8,13 @@ import { mockChildren, mockVaccines, mockVaccineSchedule } from '@/data/mock';
 import { ArrowLeft, Check, CheckCircle2, Clock, Shield } from 'lucide-react';
 import { Child, VaccineDose } from '@/types';
 
+<<<<<<< HEAD
 // Client component that uses useSearchParams
 function QuickCompleteContent() {
+=======
+// Component that uses useSearchParams
+function QuickComplete() {
+>>>>>>> 214af40 (buuild successful)
   const router = useRouter();
   const searchParams = useSearchParams();
   const childIdParam = searchParams.get('childId');
@@ -157,7 +162,7 @@ function QuickCompleteContent() {
             <h3 className="font-semibold">Overdue Tracking</h3>
           </div>
           <p className="text-sm text-gray-400">
-            Easily identify and complete overdue vaccines based on your child's age.
+            Easily identify and complete overdue vaccines based on your child&apos;s age.
           </p>
         </div>
         
@@ -175,6 +180,7 @@ function QuickCompleteContent() {
   );
 }
 
+<<<<<<< HEAD
 // Loading fallback component
 function LoadingFallback() {
   return (
@@ -182,16 +188,32 @@ function LoadingFallback() {
       <div className="text-center">
         <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
         <p className="text-gray-400">Loading vaccine data...</p>
+=======
+// Loading fallback
+function QuickCompleteLoading() {
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mx-auto"></div>
+        <p className="mt-4 text-gray-400">Loading quick complete page...</p>
+>>>>>>> 214af40 (buuild successful)
       </div>
     </div>
   );
 }
 
+<<<<<<< HEAD
 // Main page component with Suspense boundary
 export default function QuickCompletePage() {
   return (
     <Suspense fallback={<LoadingFallback />}>
       <QuickCompleteContent />
+=======
+export default function QuickCompletePage() {
+  return (
+    <Suspense fallback={<QuickCompleteLoading />}>
+      <QuickComplete />
+>>>>>>> 214af40 (buuild successful)
     </Suspense>
   );
 }
