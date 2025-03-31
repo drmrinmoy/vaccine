@@ -96,7 +96,7 @@ export default function CatchupVaccination() {
           </Link>
           <h1 className="text-2xl font-bold flex items-center">
             <Shield className="h-6 w-6 mr-2 text-green-500" />
-            Catchup Vaccination
+            Catchup Vaccination (NIS & IAP)
           </h1>
         </header>
         

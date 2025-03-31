@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "YPed - Pediatrics AI",
+  title: "Vaccine AI - NIS and IAP schedule",
   description: "Pediatrics AI by YMed AI engine",
 };
 

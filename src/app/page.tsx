@@ -17,7 +17,7 @@ export default function Home() {
               <Syringe className="h-8 w-8 mx-auto text-blue-400" />
             </div>
           </div>
-          <h1 className="text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-green-400">Vaccine AI Companion</h1>
+          <h1 className="text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-green-400">Vaccine AI - NIS and IAP schedule</h1>
           <p className="text-gray-300 max-w-xl mx-auto">
             Your intelligent solution for vaccination information and support
           </p>
@@ -35,7 +35,7 @@ export default function Home() {
         <div className="mb-10 bg-gradient-to-r from-indigo-900/40 to-purple-900/40 rounded-lg border border-indigo-800/50 p-6">
           <h2 className="text-xl font-semibold mb-3 text-indigo-300">Designed for Pediatricians</h2>
           <p className="text-gray-300 leading-relaxed">
-            Health Companion is built to help pediatricians easily follow NIS and IAP vaccination guidelines, 
+            Vaccine AI - NIS and IAP schedule is built to help pediatricians easily follow NIS and IAP vaccination guidelines, 
             implement catch-up vaccination protocols, and manage vaccinations in special situations. 
             We leverage artificial intelligence to process vaccination data, providing accurate 
             and timely recommendations tailored to each child's specific needs.
