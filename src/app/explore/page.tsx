@@ -5,7 +5,13 @@ import { Search, Filter, AlertCircle, ChevronDown, ChevronRight, Users, Weight, 
 import { BottomNav } from '@/components/bottom-nav';
 import Link from 'next/link';
 import { mockDrugInformation, mockClinicalParameters, mockClinicalCategories, mockVaccines } from '@/data/mock';
-import { DrugInformation, ClinicalParameter, Vaccine } from '@/types';
+import { 
+  Child, 
+  DrugInformation, 
+  ClinicalParameter,
+  Vaccine,
+  VaccineSchedule 
+} from '@/types';
 
 // Content type for the tabs
 type ContentType = 'drugs' | 'parameters' | 'vaccines';
@@ -213,13 +219,17 @@ export default function ExplorePage() {
   
   // Handle selection of a drug for detailed view
   const handleDrugSelect = (drug: DrugInformation) => {
-    setSelectedDrug(selectedDrug?.id === drug.id ? null : drug);
+    if (selectedDrug && selectedDrug['id'] === drug['id']) {
+      setSelectedDrug(null);
+    } else {
+      setSelectedDrug(drug);
+    }
     setSelectedParameter(null);
   };
   
   // Handle selection of a parameter for detailed view
   const handleParameterSelect = (param: ClinicalParameter) => {
-    setSelectedParameter(selectedParameter?.id === param.id ? null : param);
+    setSelectedParameter(selectedParameter && selectedParameter['id'] === param['id'] ? null : param);
     setSelectedDrug(null);
   };
   
@@ -353,20 +363,20 @@ export default function ExplorePage() {
             {filteredDrugs.length > 0 ? (
               <div className="space-y-4">
                 {filteredDrugs.map((drug) => (
-                  <div key={drug.id} className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+                  <div key={drug['id']} className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
                     <div 
                       className="p-4 cursor-pointer hover:bg-gray-800 transition-colors"
                       onClick={() => handleDrugSelect(drug)}
                     >
                       <div className="flex justify-between items-center">
                         <div>
-                          <h3 className="font-semibold">{drug.name}</h3>
+                          <h3 className="font-semibold">{drug['name']}</h3>
                           <p className="text-sm text-gray-400">
-                            {drug.genericName} · {drug.category}
+                            {drug['genericName']} · {drug['category']}
                           </p>
                         </div>
                         <div className="bg-gray-800 p-1 rounded-full">
-                          {selectedDrug?.id === drug.id ? (
+                          {selectedDrug && drug && selectedDrug['id'] === drug['id'] ? (
                             <ChevronDown className="w-5 h-5 text-green-500" />
                           ) : (
                             <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -374,17 +384,17 @@ export default function ExplorePage() {
                         </div>
                       </div>
                       <p className="text-sm text-gray-300 mt-2 line-clamp-2">
-                        {drug.description}
+                        {drug['description']}
                       </p>
                     </div>
                     
-                    {selectedDrug?.id === drug.id && (
+                    {selectedDrug && drug && selectedDrug['id'] === drug['id'] && (
                       <div className="border-t border-gray-800 p-4 animate-fadeIn">
                         <div className="space-y-4">
                           <div>
                             <h4 className="text-sm text-gray-400 mb-1">Indications</h4>
                             <ul className="text-sm space-y-1">
-                              {drug.indications.map((indication, idx) => (
+                              {drug['indications'].map((indication, idx) => (
                                 <li key={idx} className="flex items-start">
                                   <span className="block w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 mr-2"></span>
                                   <span>{indication}</span>
@@ -395,49 +405,49 @@ export default function ExplorePage() {
                           
                           <div>
                             <h4 className="text-sm text-gray-400 mb-1">Dosages</h4>
-                            {drug.dosages.map((dosage, idx) => (
+                            {drug['dosages'].map((dosage, idx) => (
                               <div key={idx} className="bg-gray-800 rounded-md p-3 mb-2">
                                 <div className="flex items-center mb-1">
                                   <Users className="w-4 h-4 text-blue-400 mr-1" />
-                                  <span className="text-sm font-medium">{dosage.ageRange}</span>
-                                  {dosage.weightRange && (
+                                  <span className="text-sm font-medium">{dosage['ageRange']}</span>
+                                  {dosage['weightRange'] && (
                                     <div className="flex items-center ml-3">
                                       <Weight className="w-4 h-4 text-yellow-400 mr-1" />
-                                      <span className="text-sm font-medium">{dosage.weightRange}</span>
+                                      <span className="text-sm font-medium">{dosage['weightRange']}</span>
                                     </div>
                                   )}
                                 </div>
                                 <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm">
                                   <div className="flex-grow">
-                                    <span className="font-semibold">{dosage.dose}</span>
-                                    <span className="text-gray-400"> {dosage.frequency}</span>
+                                    <span className="font-semibold">{dosage['dose']}</span>
+                                    <span className="text-gray-400"> {dosage['frequency']}</span>
                                   </div>
                                   <div className="text-gray-400">
                                     <span className="bg-gray-700 px-2 py-0.5 rounded text-xs">
-                                      {dosage.route}
+                                      {dosage['route']}
                                     </span>
                                   </div>
                                 </div>
-                                {dosage.maxDose && (
+                                {dosage['maxDose'] && (
                                   <div className="text-xs text-yellow-400 mt-1">
-                                    Max dose: {dosage.maxDose}
+                                    Max dose: {dosage['maxDose']}
                                   </div>
                                 )}
-                                {dosage.notes && (
+                                {dosage['notes'] && (
                                   <div className="text-xs text-gray-400 mt-1 flex items-start">
                                     <AlertCircle className="w-3 h-3 mr-1 mt-0.5 flex-shrink-0" />
-                                    {dosage.notes}
+                                    {dosage['notes']}
                                   </div>
                                 )}
                               </div>
                             ))}
                           </div>
                           
-                          {drug.contraindications && drug.contraindications.length > 0 && (
+                          {drug && drug['contraindications'] && drug['contraindications'].length > 0 && (
                             <div>
                               <h4 className="text-sm text-gray-400 mb-1">Contraindications</h4>
                               <ul className="text-sm space-y-1">
-                                {drug.contraindications.map((contraindication, idx) => (
+                                {drug['contraindications'].map((contraindication, idx) => (
                                   <li key={idx} className="flex items-start">
                                     <span className="block w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 mr-2"></span>
                                     <span>{contraindication}</span>
@@ -447,11 +457,11 @@ export default function ExplorePage() {
                             </div>
                           )}
                           
-                          {drug.sideEffects && drug.sideEffects.length > 0 && (
+                          {drug && drug['sideEffects'] && drug['sideEffects'].length > 0 && (
                             <div>
                               <h4 className="text-sm text-gray-400 mb-1">Side Effects</h4>
                               <ul className="text-sm space-y-1">
-                                {drug.sideEffects.map((sideEffect, idx) => (
+                                {drug['sideEffects'].map((sideEffect, idx) => (
                                   <li key={idx} className="flex items-start">
                                     <span className="block w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1.5 mr-2"></span>
                                     <span>{sideEffect}</span>
@@ -461,11 +471,11 @@ export default function ExplorePage() {
                             </div>
                           )}
                           
-                          {drug.warnings && drug.warnings.length > 0 && (
+                          {drug && drug['warnings'] && drug['warnings'].length > 0 && (
                             <div>
                               <h4 className="text-sm text-gray-400 mb-1">Warnings</h4>
                               <ul className="text-sm space-y-1">
-                                {drug.warnings.map((warning, idx) => (
+                                {drug['warnings'].map((warning, idx) => (
                                   <li key={idx} className="flex items-start">
                                     <AlertCircle className="w-4 h-4 text-orange-500 mr-2 flex-shrink-0" />
                                     <span>{warning}</span>
@@ -497,7 +507,7 @@ export default function ExplorePage() {
               <div>
                 <h4 className="text-sm text-gray-400 mb-1">Indications</h4>
                 <ul className="text-sm space-y-1">
-                  {selectedDrug.indications.map((indication, idx) => (
+                  {selectedDrug['indications'].map((indication, idx) => (
                     <li key={idx} className="flex items-start">
                       <span className="block w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 mr-2"></span>
                       <span>{indication}</span>
@@ -508,49 +518,49 @@ export default function ExplorePage() {
               
               <div>
                 <h4 className="text-sm text-gray-400 mb-1">Dosages</h4>
-                {selectedDrug.dosages.map((dosage, idx) => (
+                {selectedDrug['dosages'].map((dosage, idx) => (
                   <div key={idx} className="bg-gray-800 rounded-md p-3 mb-2">
                     <div className="flex items-center mb-1">
                       <Users className="w-4 h-4 text-blue-400 mr-1" />
-                      <span className="text-sm font-medium">{dosage.ageRange}</span>
-                      {dosage.weightRange && (
+                      <span className="text-sm font-medium">{dosage['ageRange']}</span>
+                      {dosage['weightRange'] && (
                         <div className="flex items-center ml-3">
                           <Weight className="w-4 h-4 text-yellow-400 mr-1" />
-                          <span className="text-sm font-medium">{dosage.weightRange}</span>
+                          <span className="text-sm font-medium">{dosage['weightRange']}</span>
                         </div>
                       )}
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm">
                       <div className="flex-grow">
-                        <span className="font-semibold">{dosage.dose}</span>
-                        <span className="text-gray-400"> {dosage.frequency}</span>
+                        <span className="font-semibold">{dosage['dose']}</span>
+                        <span className="text-gray-400"> {dosage['frequency']}</span>
                       </div>
                       <div className="text-gray-400">
                         <span className="bg-gray-700 px-2 py-0.5 rounded text-xs">
-                          {dosage.route}
+                          {dosage['route']}
                         </span>
                       </div>
                     </div>
-                    {dosage.maxDose && (
+                    {dosage['maxDose'] && (
                       <div className="text-xs text-yellow-400 mt-1">
-                        Max dose: {dosage.maxDose}
+                        Max dose: {dosage['maxDose']}
                       </div>
                     )}
-                    {dosage.notes && (
+                    {dosage['notes'] && (
                       <div className="text-xs text-gray-400 mt-1 flex items-start">
                         <AlertCircle className="w-3 h-3 mr-1 mt-0.5 flex-shrink-0" />
-                        {dosage.notes}
+                        {dosage['notes']}
                       </div>
                     )}
                   </div>
                 ))}
               </div>
               
-              {selectedDrug.contraindications && selectedDrug.contraindications.length > 0 && (
+              {selectedDrug && selectedDrug['contraindications'] && selectedDrug['contraindications'].length > 0 && (
                 <div>
                   <h4 className="text-sm text-gray-400 mb-1">Contraindications</h4>
                   <ul className="text-sm space-y-1">
-                    {selectedDrug.contraindications.map((contraindication, idx) => (
+                    {selectedDrug['contraindications'].map((contraindication, idx) => (
                       <li key={idx} className="flex items-start">
                         <span className="block w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 mr-2"></span>
                         <span>{contraindication}</span>
@@ -560,11 +570,11 @@ export default function ExplorePage() {
                 </div>
               )}
               
-              {selectedDrug.sideEffects && selectedDrug.sideEffects.length > 0 && (
+              {selectedDrug && selectedDrug['sideEffects'] && selectedDrug['sideEffects'].length > 0 && (
                 <div>
                   <h4 className="text-sm text-gray-400 mb-1">Side Effects</h4>
                   <ul className="text-sm space-y-1">
-                    {selectedDrug.sideEffects.map((sideEffect, idx) => (
+                    {selectedDrug['sideEffects'].map((sideEffect, idx) => (
                       <li key={idx} className="flex items-start">
                         <span className="block w-1.5 h-1.5 rounded-full bg-yellow-500 mt-1.5 mr-2"></span>
                         <span>{sideEffect}</span>
@@ -574,11 +584,11 @@ export default function ExplorePage() {
                 </div>
               )}
               
-              {selectedDrug.warnings && selectedDrug.warnings.length > 0 && (
+              {selectedDrug && selectedDrug['warnings'] && selectedDrug['warnings'].length > 0 && (
                 <div>
                   <h4 className="text-sm text-gray-400 mb-1">Warnings</h4>
                   <ul className="text-sm space-y-1">
-                    {selectedDrug.warnings.map((warning, idx) => (
+                    {selectedDrug['warnings'].map((warning, idx) => (
                       <li key={idx} className="flex items-start">
                         <AlertCircle className="w-4 h-4 text-orange-500 mr-2 flex-shrink-0" />
                         <span>{warning}</span>
@@ -602,20 +612,20 @@ export default function ExplorePage() {
             {filteredParameters.length > 0 ? (
               <div className="space-y-4">
                 {filteredParameters.map((parameter) => (
-                  <div key={parameter.id} className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+                  <div key={parameter['id']} className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
                     <div 
                       className="p-4 cursor-pointer hover:bg-gray-800 transition-colors"
                       onClick={() => handleParameterSelect(parameter)}
                     >
                       <div className="flex justify-between items-center">
                         <div>
-                          <h3 className="font-semibold">{parameter.name}</h3>
+                          <h3 className="font-semibold">{parameter['name']}</h3>
                           <p className="text-sm text-gray-400">
-                            {parameter.category} · {parameter.unit}
+                            {parameter['category']} · {parameter['unit']}
                           </p>
                         </div>
                         <div className="bg-gray-800 p-1 rounded-full">
-                          {selectedParameter?.id === parameter.id ? (
+                          {selectedParameter && parameter && selectedParameter['id'] === parameter['id'] ? (
                             <ChevronDown className="w-5 h-5 text-green-500" />
                           ) : (
                             <ChevronRight className="w-5 h-5 text-gray-400" />
@@ -623,11 +633,11 @@ export default function ExplorePage() {
                         </div>
                       </div>
                       <p className="text-sm text-gray-300 mt-2 line-clamp-2">
-                        {parameter.description}
+                        {parameter['description']}
                       </p>
                     </div>
                     
-                    {selectedParameter?.id === parameter.id && (
+                    {selectedParameter && parameter && selectedParameter['id'] === parameter['id'] && (
                       <div className="border-t border-gray-800 p-4 animate-fadeIn">
                         <div className="space-y-4">
                           <div>
@@ -644,15 +654,15 @@ export default function ExplorePage() {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {parameter.normalRanges.map((range, idx) => (
+                                  {parameter['normalRanges'].map((range, idx) => (
                                     <tr key={idx} className="border-b border-gray-800 hover:bg-gray-800">
-                                      <td className="py-2 px-3">{range.ageRange}</td>
+                                      <td className="py-2 px-3">{range['ageRange']}</td>
                                       <td className="py-2 px-3 capitalize">
-                                        {range.gender === 'all' ? 'All' : range.gender}
+                                        {range['gender'] === 'all' ? 'All' : range['gender']}
                                       </td>
-                                      <td className="py-2 px-3 text-right">{range.minValue}</td>
-                                      <td className="py-2 px-3 text-right">{range.maxValue}</td>
-                                      <td className="py-2 px-3 text-xs text-gray-400">{range.notes || '-'}</td>
+                                      <td className="py-2 px-3 text-right">{range['minValue']}</td>
+                                      <td className="py-2 px-3 text-right">{range['maxValue']}</td>
+                                      <td className="py-2 px-3 text-xs text-gray-400">{range['notes'] || '-'}</td>
                                     </tr>
                                   ))}
                                 </tbody>
@@ -660,21 +670,21 @@ export default function ExplorePage() {
                             </div>
                           </div>
                           
-                          {parameter.interpretations && parameter.interpretations.length > 0 && (
+                          {parameter['interpretations'] && parameter['interpretations'].length > 0 && (
                             <div>
                               <h4 className="text-sm text-gray-400 mb-2">Clinical Interpretation</h4>
-                              {parameter.interpretations.map((interpretation, idx) => (
+                              {parameter['interpretations'].map((interpretation, idx) => (
                                 <div key={idx} className="bg-gray-800 rounded-md p-3 mb-2">
                                   <div className="flex flex-wrap gap-2 mb-1">
                                     <span className="bg-gray-700 px-2 py-0.5 rounded text-xs">
-                                      {interpretation.condition}
+                                      {interpretation['condition']}
                                     </span>
                                     <span className="bg-gray-700 px-2 py-0.5 rounded text-xs font-mono">
-                                      {interpretation.range}
+                                      {interpretation['range']}
                                     </span>
                                   </div>
                                   <p className="text-sm text-gray-300">
-                                    {interpretation.interpretation}
+                                    {interpretation['interpretation']}
                                   </p>
                                 </div>
                               ))}
@@ -714,15 +724,15 @@ export default function ExplorePage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {selectedParameter.normalRanges.map((range, idx) => (
+                      {selectedParameter['normalRanges'].map((range, idx) => (
                         <tr key={idx} className="border-b border-gray-800 hover:bg-gray-800">
-                          <td className="py-2 px-3">{range.ageRange}</td>
+                          <td className="py-2 px-3">{range['ageRange']}</td>
                           <td className="py-2 px-3 capitalize">
-                            {range.gender === 'all' ? 'All' : range.gender}
+                            {range['gender'] === 'all' ? 'All' : range['gender']}
                           </td>
-                          <td className="py-2 px-3 text-right">{range.minValue}</td>
-                          <td className="py-2 px-3 text-right">{range.maxValue}</td>
-                          <td className="py-2 px-3 text-xs text-gray-400">{range.notes || '-'}</td>
+                          <td className="py-2 px-3 text-right">{range['minValue']}</td>
+                          <td className="py-2 px-3 text-right">{range['maxValue']}</td>
+                          <td className="py-2 px-3 text-xs text-gray-400">{range['notes'] || '-'}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -730,21 +740,21 @@ export default function ExplorePage() {
                 </div>
               </div>
               
-              {selectedParameter.interpretations && selectedParameter.interpretations.length > 0 && (
+              {selectedParameter && selectedParameter['interpretations'] && selectedParameter['interpretations'].length > 0 && (
                 <div>
                   <h4 className="text-sm text-gray-400 mb-2">Clinical Interpretation</h4>
-                  {selectedParameter.interpretations.map((interpretation, idx) => (
+                  {selectedParameter['interpretations'].map((interpretation, idx) => (
                     <div key={idx} className="bg-gray-800 rounded-md p-3 mb-2">
                       <div className="flex flex-wrap gap-2 mb-1">
                         <span className="bg-gray-700 px-2 py-0.5 rounded text-xs">
-                          {interpretation.condition}
+                          {interpretation['condition']}
                         </span>
                         <span className="bg-gray-700 px-2 py-0.5 rounded text-xs font-mono">
-                          {interpretation.range}
+                          {interpretation['range']}
                         </span>
                       </div>
                       <p className="text-sm text-gray-300">
-                        {interpretation.interpretation}
+                        {interpretation['interpretation']}
                       </p>
                     </div>
                   ))}
@@ -768,7 +778,7 @@ export default function ExplorePage() {
             ) : (
               searchResults.map(vaccine => (
                 <div 
-                  key={vaccine.id}
+                  key={vaccine['id']}
                   className="bg-gray-900 rounded-lg p-4 border border-gray-800 hover:border-green-700 transition-colors cursor-pointer"
                   onClick={() => handleSelectVaccine(vaccine)}
                 >
@@ -777,19 +787,19 @@ export default function ExplorePage() {
                       <Shield className="h-6 w-6 text-green-400" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg">{vaccine.name}</h3>
+                      <h3 className="font-semibold text-lg">{vaccine['name']}</h3>
                       <p className="text-sm text-gray-400 mb-2">
-                        {vaccine.diseases.join(', ')}
+                        {vaccine['diseases'].join(', ')}
                       </p>
                       <p className="text-sm text-gray-300 line-clamp-2">
-                        {vaccine.description}
+                        {vaccine['description']}
                       </p>
                       <div className="flex items-center mt-2">
                         <span className="text-xs bg-gray-800 text-gray-300 px-2 py-0.5 rounded-full">
-                          {vaccine.doseCount} {vaccine.doseCount === 1 ? 'dose' : 'doses'}
+                          {vaccine['doseCount']} {vaccine['doseCount'] === 1 ? 'dose' : 'doses'}
                         </span>
                         <span className="text-xs bg-gray-800 text-gray-300 px-2 py-0.5 rounded-full ml-2">
-                          Ages: {vaccine.recommendedAges.join(', ')}
+                          Ages: {vaccine['recommendedAges'].join(', ')}
                         </span>
                       </div>
                     </div>
@@ -818,9 +828,9 @@ export default function ExplorePage() {
                     <Shield className="h-8 w-8 text-green-400" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold">{selectedVaccine.name}</h2>
+                    <h2 className="text-2xl font-bold">{selectedVaccine['name']}</h2>
                     <p className="text-gray-300 mt-1">
-                      Protects against: {selectedVaccine.diseases.join(', ')}
+                      Protects against: {selectedVaccine['diseases'].join(', ')}
                     </p>
                   </div>
                 </div>
@@ -829,17 +839,17 @@ export default function ExplorePage() {
               <div className="p-5">
                 <section className="mb-6">
                   <h3 className="text-lg font-semibold mb-3">About this vaccine</h3>
-                  <p className="text-gray-300 mb-4">{selectedVaccine.description}</p>
+                  <p className="text-gray-300 mb-4">{selectedVaccine['description']}</p>
                   
                   <div className="grid grid-cols-2 gap-4 mt-4">
                     <div className="bg-gray-800 rounded-lg p-3">
                       <h4 className="text-sm font-medium text-gray-400 mb-1">Doses Required</h4>
-                      <p className="text-xl font-semibold">{selectedVaccine.doseCount}</p>
+                      <p className="text-xl font-semibold">{selectedVaccine['doseCount']}</p>
                     </div>
                     <div className="bg-gray-800 rounded-lg p-3">
                       <h4 className="text-sm font-medium text-gray-400 mb-1">Type</h4>
                       <p className="text-xl font-semibold">
-                        {selectedVaccine.name.includes('OPV') ? 'Oral' : 'Injectable'}
+                        {selectedVaccine['name'].includes('OPV') ? 'Oral' : 'Injectable'}
                       </p>
                     </div>
                   </div>
@@ -849,7 +859,7 @@ export default function ExplorePage() {
                   <h3 className="text-lg font-semibold mb-3">Recommended Ages</h3>
                   <div className="bg-gray-800 rounded-lg p-4">
                     <ul className="space-y-2">
-                      {selectedVaccine.recommendedAges.map((age, index) => (
+                      {selectedVaccine['recommendedAges'].map((age, index) => (
                         <li key={index} className="flex items-start gap-2">
                           <Clock className="h-5 w-5 text-green-400 mt-0.5" />
                           <span>{age}</span>
@@ -859,21 +869,21 @@ export default function ExplorePage() {
                   </div>
                 </section>
                 
-                {selectedVaccine.catchupAges && (
+                {selectedVaccine['catchupAges'] && (
                   <section className="mb-6">
                     <h3 className="text-lg font-semibold mb-3">Catch-up Schedule</h3>
                     <div className="bg-gray-800 rounded-lg p-4">
-                      <p className="text-gray-300">{selectedVaccine.catchupAges}</p>
+                      <p className="text-gray-300">{selectedVaccine['catchupAges']}</p>
                     </div>
                   </section>
                 )}
                 
-                {selectedVaccine.sideEffects && (
+                {selectedVaccine['sideEffects'] && (
                   <section className="mb-6">
                     <h3 className="text-lg font-semibold mb-3">Possible Side Effects</h3>
                     <div className="bg-gray-800 rounded-lg p-4">
                       <ul className="space-y-2">
-                        {selectedVaccine.sideEffects.map((effect, index) => (
+                        {selectedVaccine['sideEffects'].map((effect, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <div className="h-5 w-5 flex items-center justify-center">
                               <div className="h-2 w-2 bg-amber-500 rounded-full"></div>
@@ -886,12 +896,12 @@ export default function ExplorePage() {
                   </section>
                 )}
                 
-                {selectedVaccine.contraindications && (
+                {selectedVaccine['contraindications'] && (
                   <section className="mb-6">
                     <h3 className="text-lg font-semibold mb-3">Contraindications</h3>
                     <div className="bg-gray-800 rounded-lg p-4">
                       <ul className="space-y-2">
-                        {selectedVaccine.contraindications.map((item, index) => (
+                        {selectedVaccine['contraindications'].map((item, index) => (
                           <li key={index} className="flex items-start gap-2">
                             <div className="h-5 w-5 flex items-center justify-center">
                               <div className="h-2 w-2 bg-red-500 rounded-full"></div>

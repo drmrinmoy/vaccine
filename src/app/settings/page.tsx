@@ -62,7 +62,7 @@ export default function SettingsPage() {
             </div>
             <div className="flex-1">
               <h2 className="font-semibold text-lg">{mockUserProfile.name}</h2>
-              <p className="text-sm text-gray-400">{mockUserProfile.age} years old</p>
+              <p className="text-sm text-gray-400">{mockUserProfile.email}</p>
             </div>
             <button className="text-green-400">Edit</button>
           </div>
@@ -80,7 +80,6 @@ export default function SettingsPage() {
                 <input
                   type="checkbox"
                   className="w-4 h-4 rounded border-gray-600 text-green-600 focus:ring-green-500"
-                  checked={mockUserProfile.dietaryPreferences.includes(restriction)}
                   readOnly
                 />
                 <span>{restriction}</span>
