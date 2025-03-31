@@ -8,13 +8,26 @@ interface Message {
   content: string;
 }
 
-// Initialize the DeepSeek client with your API key
-const openai = new OpenAI({
-  baseURL: 'https://api.deepseek.com/v1',
-  apiKey: process.env.DEEPSEEK_API_KEY,
-  maxRetries: 3,
-  timeout: 60000
-})
+// Initialize the DeepSeek client with your API key if available
+const apiKey = process.env.DEEPSEEK_API_KEY || '';
+
+// Create OpenAI client only if API key is available
+const createOpenAIClient = () => {
+  if (!apiKey) {
+    console.warn('DEEPSEEK_API_KEY is missing. Vaccine AI functionality will be limited.');
+    return null;
+  }
+
+  return new OpenAI({
+    baseURL: 'https://api.deepseek.com/v1',
+    apiKey,
+    maxRetries: 3,
+    timeout: 60000
+  });
+};
+
+// Initialize client lazily to avoid build errors
+let openaiClient: OpenAI | null = null;
 
 // Retry function with exponential backoff
 async function retryWithExponentialBackoff(fn: () => Promise<any>, maxRetries = 3) {
@@ -42,6 +55,18 @@ export async function POST(req: Request) {
   console.log(`[${requestId}] Processing vaccine AI request`)
   
   try {
+    // Initialize client on first request
+    if (!openaiClient) {
+      openaiClient = createOpenAIClient();
+      
+      if (!openaiClient) {
+        return NextResponse.json(
+          { error: "API key missing. Please set DEEPSEEK_API_KEY environment variable." }, 
+          { status: 500 }
+        );
+      }
+    }
+
     const body = await req.json()
     const { messages } = body
     
@@ -58,7 +83,7 @@ export async function POST(req: Request) {
     
     // Generate response with retry
     const completion = await retryWithExponentialBackoff(async () => {
-      return await openai.chat.completions.create({
+      return await openaiClient!.chat.completions.create({
         model: "deepseek-chat",
         messages: [
           {
